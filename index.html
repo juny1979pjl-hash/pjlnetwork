@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PJL NETWORK</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+body{
+  font-family:Arial,sans-serif;
+  margin:0;
+  background:#f4f4f4;
+}
+header{
+  background:#0066cc;
+  color:white;
+  text-align:center;
+  padding:40px 20px;
+}
+section{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+.card{
+  background:white;
+  padding:20px;
+  margin:15px 0;
+  border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+.precio{
+  color:#0066cc;
+  font-size:24px;
+  font-weight:bold;
+}
+.whatsapp,
+.ubicacion,
+.agendar{
+  position:fixed;
+  right:20px;
+  color:white;
+  padding:15px 20px;
+  border-radius:50px;
+  text-decoration:none;
+  font-weight:bold;
+  box-shadow:0 3px 8px rgba(0,0,0,.3);
+  transition:all .3s ease;
+}
+.whatsapp{
+  bottom:20px;
+  background:#25D366;
+}
+.ubicacion{
+  bottom:85px;
+  background:#0066cc;
+}
+.agendar{
+  bottom:150px;
+  background:#ff9800;
+}
+.whatsapp:hover{
+  background:#1ebe5d;
+  transform:scale(1.08);
+}
+.ubicacion:hover{
+  background:#004c99;
+  transform:scale(1.08);
+}
+.agendar:hover{
+  background:#e68900;
+  transform:scale(1.08);
+}
+.whatsapp i,
+.ubicacion i,
+.agendar i{
+  margin-right:8px;
+}
+.whatsapp:hover i,
+.ubicacion:hover i,
+.agendar:hover i{
+  animation:icono .6s ease;
+}
+@keyframes icono{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.4);}
+  100%{transform:scale(1);}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>PJL NETWORK</h1>
+  <p>Internet Rápido y Confiable</p>
+</header>
+
+<section>
+  <h2>Planes Disponibles</h2>
+
+  <div class="card">
+    <h3>15 Megas</h3>
+    <p class="precio">$40 / mes</p>
+    <p>Ideal para navegación básica, redes sociales y streaming en un solo dispositivo.</p>
+  </div>
+
+  <div class="card">
+    <h3>20 Megas</h3>
+    <p class="precio">$50 / mes</p>
+    <p>Perfecto para varios dispositivos conectados, videollamadas y streaming HD.</p>
+  </div>
+
+  <div class="card">
+    <h3>30 Megas</h3>
+    <p class="precio">$60 / mes</p>
+    <p>Ideal para hogares con múltiples usuarios, streaming 4K y trabajo remoto.</p>
+  </div>
+</section>
+
+<a href="https://wa.me/17872335761" class="whatsapp" target="_blank">
+  <i class="fa-brands fa-whatsapp"></i>WhatsApp
+</a>
+
+<a href="https://wa.me/17872335761?text=Hola%2C%20quiero%20saber%20si%20tienen%20cobertura%20en%20mi%20zona.%20Les%20comparto%20mi%20ubicaci%C3%B3n%3A" class="ubicacion" target="_blank">
+  <i class="fa-solid fa-location-dot"></i>Ubicación
+</a>
+
+<a href="https://wa.me/17872335761?text=Hola%2C%20quiero%20agendar%20una%20instalación%20o%20visita." class="agendar" target="_blank">
+  <i class="fa-solid fa-calendar-check"></i>Agendar
+</a>
+
+</body>
+</html>
