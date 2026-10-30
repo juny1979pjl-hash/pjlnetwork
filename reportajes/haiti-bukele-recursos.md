@@ -2,29 +2,42 @@
 
 Material audiovisual del especial. El guion completo está en [`haiti-bukele-voz-off.md`](haiti-bukele-voz-off.md).
 
-## Video montado (Descript)
+## Video final (Descript)
 
 | Recurso | Enlace |
 |---|---|
-| Ver el video (15:28, 1080p) | https://share.descript.com/view/9EHeniyPdGc |
-| Proyecto editable en Descript | https://web.descript.com/a009ca19-65f1-4d72-a690-55c37f088d2b/99917 |
+| **Ver el reportaje final (15:28, 1080p)** | https://share.descript.com/view/O1Yj9W9xZzP |
+| Proyecto editable en Descript (composición "REPORTAJE FINAL — Bukele en Haití") | https://web.descript.com/a009ca19-65f1-4d72-a690-55c37f088d2b/a4937 |
+| Primera versión (fondo negro, solo rótulos) | https://share.descript.com/view/9EHeniyPdGc |
 
-**Estado del montaje**
+**Qué contiene el montaje final**
 
-| Elemento | Estado |
+- **Voz off completa**, en cuatro tramos.
+- **Apertura, tarjetas de capítulo y cierre con fuentes.**
+- **Unas 70 escenas animadas y sincronizadas con la narración:**
+  - Mapas de Centroamérica, el Caribe y Haití, con marcadores y rutas.
+  - Contadores y gráficos de barras con las cifras.
+  - Líneas de tiempo, citas a pantalla completa y la tarjeta de las cuatro siluetas.
+- **18 rótulos** con fechas y datos.
+- **Barra de titulares** que se desplaza en la parte inferior, con la marca "ESPECIAL · BUKELE EN HAITÍ".
+- **Subtítulos en español** incrustados.
+- **Música de fondo original**, que sube en la apertura, las pausas entre capítulos y el cierre.
+
+Todo el material visual son gráficos y mapas ilustrativos: no hay imágenes de stock ni fotografías de personas reales.
+
+### Cómo se produjo
+
+La imagen se genera con los scripts de [`produccion/`](produccion/), escritos en Python con Pillow, OpenCV, CairoSVG y ffmpeg:
+
+| Archivo | Qué hace |
 |---|---|
-| Voz off completa | Hecho |
-| Apertura y tarjetas de capítulo | Hecho |
-| 18 rótulos con fechas y datos | Hecho |
-| Citas a pantalla completa | Hecho |
-| Tarjeta de las cuatro siluetas | Hecho |
-| Música de noticiero con ducking | Hecho |
-| Subtítulos en español | Hecho |
-| Cierre con fuentes | Hecho |
-| Imágenes de stock (b-roll) mientras habla el narrador | **Pendiente** (por ahora el fondo es negro) |
-| Ajuste del volumen de la música | Pendiente |
-| Alinear el rótulo del capítulo 1 | Pendiente |
-| Corregir el solape de la tarjeta de siluetas con el rótulo "DÍA 12" | Pendiente |
+| `scenes.py` | Define las escenas, los rótulos y la barra de titulares, con sus tiempos |
+| `gfx.py` | Dibuja los mapas, los textos y los iconos |
+| `render.py` | Anima las escenas (Ken Burns, fundidos, contadores) y codifica el video |
+| `music.py` | Sintetiza la música de fondo |
+| `subs.srt` | Subtítulos, sacados de la transcripción de Descript |
+
+Después, en Descript, el video se combina con las cuatro pistas de voz.
 
 ## Voz off (Artlist)
 
