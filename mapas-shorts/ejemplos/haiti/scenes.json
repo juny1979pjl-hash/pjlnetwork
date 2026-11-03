@@ -1,0 +1,11 @@
+[
+ {"id":"hook","say":"¿Por qué una sola isla del Caribe está partida en dos países? Haití y República Dominicana.","cap":"¿Por qué una *isla* está partida en *dos* países?"},
+ {"id":"colon","say":"En mil cuatrocientos noventa y dos, Colón llegó a La Española, y España la convirtió en su primera colonia en América, con capital en Santo Domingo.","cap":"*1492:* Colón llega a *La* *Española.* Capital: *Santo* *Domingo*"},
+ {"id":"osorio","say":"Pero España descuidó el oeste. En mil seiscientos cinco incluso vació esa costa para frenar el contrabando, y piratas franceses ocuparon el hueco.","cap":"*1605:* España vacía el oeste… y llegan *piratas* *franceses*"},
+ {"id":"ryswick","say":"En mil seiscientos noventa y siete, España le cedió el tercio occidental a Francia. Nació Saint-Domingue.","cap":"*1697:* el oeste pasa a *Francia* → *Saint-Domingue*"},
+ {"id":"rica","say":"Se volvió la colonia más rica del mundo, con azúcar y café, a costa de casi medio millón de africanos esclavizados.","cap":"La colonia *más* *rica* del mundo… con *≈500.000* esclavizados"},
+ {"id":"revuelta","say":"En mil setecientos noventa y uno se rebelaron, y en mil ochocientos cuatro fundaron Haití, la primera república negra libre del mundo.","cap":"*1791:* rebelión → *1804:* nace *Haití*"},
+ {"id":"deuda","say":"Francia le exigió una enorme indemnización para reconocerla, una deuda que Haití arrastró durante más de un siglo.","cap":"Francia cobra *150* *millones* de francos por reconocerla"},
+ {"id":"rd","say":"Haití llegó a gobernar toda la isla, hasta que en mil ochocientos cuarenta y cuatro el este se independizó: la República Dominicana.","cap":"*1822:* Haití une la isla → *1844:* nace la *República* *Dominicana*"},
+ {"id":"cierre","say":"Por eso hoy una misma isla tiene dos países, dos idiomas, y una frontera que se ve desde el espacio. ¿Lo sabías?","cap":"Una isla, *dos* países, *dos* idiomas. ¿Lo sabías?"}
+]
