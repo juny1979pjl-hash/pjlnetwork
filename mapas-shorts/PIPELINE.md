@@ -62,5 +62,12 @@ node render.js full short.mp4
   - `publish_at`: hoy a las **01:00:00Z** del día siguiente, es decir, las 19:00 de Ciudad de México. Formato ISO, por ejemplo `2026-11-05T01:00:00.000Z`.
 - El escenario sube el vídeo como privado con publicación programada. Si falla, revisa `executions_get-detail` antes de reintentar. Reintenta como mucho una vez.
 
+## 6b. TikTok (borrador)
+- Importa el vídeo en Higgsfield con `media_import_url`. Usa la URL de jsDelivr con el **hash del commit**, porque la URL raw de GitHub se rechaza (llega como octet-stream):
+  `https://cdn.jsdelivr.net/gh/juny1979pjl-hash/pjlnetwork@<hash>/shorts/<archivo>.mp4`
+- Con `show_medias` (tipo video) obtén la URL de cloudfront de ese media_id.
+- Llama a `tiktok_prepare_publish` con `connector_id` 6c15e3eb-b4fe-49bb-beda-5f0e6b4a1073, modo `UPLOAD_TO_DRAFT`, un título corto con emoji y una descripción con hashtags.
+- El usuario confirma el formulario. **Nunca** llames a `tiktok_publish` tú. El formulario caduca en 1 h; si caduca, prepáralo de nuevo cuando el usuario lo pida.
+
 ## 7. Informe
 Termina con un resumen corto: tema, título, hora de publicación, URL del vídeo y el resultado de la ejecución de Make.
