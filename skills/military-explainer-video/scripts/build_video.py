@@ -13,6 +13,8 @@ Shot list format (paths are relative to the JSON file):
   "music_db": -18,                   # optional; music level before ducking
   "captions": "captions/vo_en.srt",  # optional; burned in
   "handle": "@yourchannel",          # optional; small watermark
+  "transition": "flash",             # optional default for every cut: flash, glitch, cut
+  "cut_sfx": "audio/sfx/whoosh.mp3", # optional sound on every cut; cut_sfx_db (default -10)
   "output": "out/long_en.mp4",
   "shots": [
     {"file": "visuals/clock.png", "duration": 3, "motion": "none"},
@@ -23,13 +25,17 @@ Shot list format (paths are relative to the JSON file):
 }
 
 Per shot:
-  file      image (.png/.jpg/.webp) or video (.mp4/.mov/.webm)
+  file      image (.png/.jpg/.webp) or video (.mp4/.mov/.webm; a short clip holds its last frame)
   duration  relative length in seconds (default 4). All durations are scaled together so
             the video ends 0.6 s after the voiceover — you don't need exact timings.
   motion    stills only: zoom_in (default), zoom_out, pan_left, pan_right, none
   fit       crop (default: fill the frame, cut edges) or blur (whole image over a blurred
             copy — use for 16:9 material in a 9:16 video)
   sfx       optional sound effect starting at this shot; sfx_db sets its level (default -6)
+  transition  how this shot comes in: flash (white flash), glitch (RGB split + noise), cut
+  shake     true for handheld/impact camera shake (launches, explosions, fast flybys)
+
+Captions: an .ass file from make_captions.py gives the pop-word style; .srt gives plain subs.
 """
 import json
 import os
@@ -73,7 +79,7 @@ def motion_filter(motion, frames, w, h, fps):
     y = "ih/2-(ih/zoom/2)"
     # upscale first so the slow zoom doesn't jitter
     return (f"[fit]scale={w * 2}:{h * 2},zoompan=z='{z}':x='{x}':y='{y}':d={frames}:s={w}x{h}:fps={fps},"
-            f"setsar=1[v]")
+            f"setsar=1[pre]")
 
 
 def render_shot(shot, dur, w, h, fps, out):
@@ -84,11 +90,29 @@ def render_shot(shot, dur, w, h, fps, out):
         graph = fit_filter(fit, w, h) + ";" + motion_filter(shot.get("motion", "zoom_in"), frames, w, h, fps)
         cmd = ["ffmpeg", "-y", "-v", "error", "-loop", "1", "-framerate", str(fps), "-t", f"{dur:.3f}", "-i", src]
     else:
-        graph = fit_filter(fit, w, h) + f";[fit]fps={fps}[v]"
-        cmd = ["ffmpeg", "-y", "-v", "error", "-stream_loop", "-1", "-i", src]
+        # if the clip is shorter than its slot, hold the last frame (loops look wrong on cards)
+        graph = fit_filter(fit, w, h) + f";[fit]fps={fps},tpad=stop_mode=clone:stop_duration={dur:.3f}[pre]"
+        cmd = ["ffmpeg", "-y", "-v", "error", "-i", src]
+    graph += ";[pre]" + effects(shot, w, h) + "[v]"
     cmd += ["-filter_complex", graph, "-map", "[v]", "-frames:v", str(frames), "-an",
             "-c:v", "libx264", "-preset", "veryfast", "-crf", "18", "-pix_fmt", "yuv420p", out]
     run(cmd)
+
+
+def effects(shot, w, h):
+    fx = []
+    if shot.get("shake"):
+        m = 24  # crop a margin and wobble inside it, then scale back up
+        fx.append(f"crop={w - 2 * m}:{h - 2 * m}:x='{m}+{m * 0.8}*sin(t*31)*sin(t*7)':"
+                  f"y='{m}+{m * 0.8}*cos(t*27)*sin(t*5)',scale={w}:{h}")
+    tr = shot.get("transition", "cut")
+    if tr == "flash":
+        fx.append("fade=t=in:st=0:d=0.22:color=white")
+    elif tr == "glitch":
+        fx.append("rgbashift=rh=-18:bh=18:gv=6:enable='lt(t,0.2)'")
+        fx.append("noise=alls=60:allf=t:enable='lt(t,0.2)'")
+    fx.append("setsar=1")
+    return ",".join(fx)
 
 
 def font_file():
@@ -112,7 +136,9 @@ def main():
     vo = rel(spec["voiceover"])
     total = duration(vo) + 0.6
     shots = spec["shots"]
-    for s in shots:
+    for i, s in enumerate(shots):
+        if i and "transition" not in s and spec.get("transition"):
+            s["transition"] = spec["transition"]
         s["file"] = rel(s["file"])
         if not os.path.exists(s["file"]):
             sys.exit(f"missing shot file: {s['file']}")
@@ -147,7 +173,14 @@ def main():
         else:
             filters.append("[key]anullsink")
         t = 0.0
-        for s, d in zip(shots, durs):
+        for k, (s, d) in enumerate(zip(shots, durs)):
+            if k and spec.get("cut_sfx") and not s.get("sfx"):
+                ms = max(int(t * 1000) - 120, 0)  # whoosh leads the cut slightly
+                inputs += ["-i", rel(spec["cut_sfx"])]
+                filters.append(f"[{idx}:a]aformat=sample_rates=48000:channel_layouts=stereo,"
+                               f"volume={spec.get('cut_sfx_db', -10)}dB,adelay={ms}|{ms}[sfx{idx}]")
+                mix.append(f"[sfx{idx}]")
+                idx += 1
             if s.get("sfx"):
                 ms = int(t * 1000)
                 inputs += ["-i", rel(s["sfx"])]
@@ -163,13 +196,15 @@ def main():
         vchain = "[0:v]"
         vf = []
         if spec.get("captions"):
-            srt = os.path.join(tmp, "captions.srt")
-            shutil.copy(rel(spec["captions"]), srt)
+            cap = rel(spec["captions"])
+            is_ass = cap.lower().endswith(".ass")
+            srt = os.path.join(tmp, "captions.ass" if is_ass else "captions.srt")
+            shutil.copy(cap, srt)
             vertical = h > w
             style = ("FontName=Inter,Bold=1,Outline=3,Shadow=0,BorderStyle=1,PrimaryColour=&H00FFFFFF,"
                      "OutlineColour=&H00000000,Alignment=2,"
                      + ("FontSize=16,MarginV=62" if vertical else "FontSize=20,MarginV=40"))
-            vf.append(f"subtitles={srt}:force_style='{style}'")
+            vf.append(f"ass={srt}" if is_ass else f"subtitles={srt}:force_style='{style}'")
         if spec.get("handle"):
             ff = font_file()
             handle = spec["handle"].replace(":", r"\:").replace("'", "")

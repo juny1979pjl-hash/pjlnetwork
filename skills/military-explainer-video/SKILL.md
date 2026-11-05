@@ -77,7 +77,12 @@ Show the user the script and get a thumbs-up before generating anything — it's
 
 ## Step 3 — Shot list
 
-Turn each beat into 1–3 shots of 3–6 seconds (shorts: 2–4 s; cut faster). Write `shots_16x9.json` / `shots_9x16.json` in the format documented at the top of `scripts/build_video.py`. You don't need exact durations — the build script stretches shots to fit the voiceover — but give longer beats more shots.
+Turn each beat into 1–3 shots. Keep the pace fast — that's what makes the style feel urgent: 2–4 s per shot on the short, 3–5 s on the long version, and never a static image over ~5 s. Write `shots_16x9.json` / `shots_9x16.json` in the format documented at the top of `scripts/build_video.py`. You don't need exact durations — the build script stretches shots to fit the voiceover — but give longer beats more shots.
+
+Editing choices that make it punchy (all set in the shot list):
+- `"transition": "flash"` as the default for every cut; `"glitch"` on reveals, title cards and moments when a radar "sees" something.
+- `"cut_sfx"`: a short whoosh on every cut.
+- `"shake": true` on launches, impacts and low fly-bys, with a boom or whoosh as that shot's `sfx`.
 
 ## Step 4 — Voiceover
 
@@ -91,8 +96,9 @@ Use whichever voice connector is available (ElevenLabs `creative_generate_speech
 
 Read `references/visuals.md` for prompt templates per shot type. In brief:
 
-- **SPEC / TITLE / STAT / CLOCK cards** — render locally with `scripts/make_card.py` (free, consistent, exact text). Never ask an image model to draw text or numbers; they garble it.
-- **MAP and BROLL** — AI image or video generation through the connected tools (ElevenLabs, Artlist, Higgsfield…). Generate stills for most shots and let `build_video.py` animate them with slow zoom/pan; spend video-generation credits on the 10–20% of hero moments (launches, low-level flight, intercept).
+- **SPEC / TITLE / STAT / CLOCK cards** — render locally as animated MP4s with `scripts/make_card.py` (free, consistent, exact text): name bars wipe in, stat rows slide in, numbers count up, tags flash. Give each card a `--duration` close to its slot in the shot list (a short clip holds its last frame). Never ask an image model to draw text or numbers; they garble it.
+- **MAP** — generate a clean terrain image (no text, no lines — see `references/visuals.md`), then animate it with `scripts/make_map.py`: the flight paths draw themselves as dashed yellow lines with missile markers, targets pulse, radar rings sweep, and a countdown ticks. Look at the terrain image before placing path points so the route follows the valleys.
+- **BROLL** — AI image or video generation through the connected tools (ElevenLabs, Artlist, Higgsfield…). Generate stills for most shots and let `build_video.py` animate them with slow zoom/pan; spend video-generation credits on the 10–20% of hero moments (launches, low-level flight, intercept).
 - Generate at the target aspect. For "both" versions, generate hero shots twice (16:9 and 9:16) rather than cropping; for ordinary stills, `build_video.py` can fill a vertical frame with a blurred copy behind the image (`"fit": "blur"`).
 - Check cost first where the tool offers a cost estimate, and tell the user the total before a big batch.
 - Don't use news-agency or channel footage (Reuters, AP, other creators). It's copyrighted and the reference video's "Source: Reuters" clips are exactly what gets channels claimed. Original or licensed only.
@@ -103,13 +109,14 @@ Search a licensed catalog (e.g., Artlist `search_music` / `search_sfx`) for dark
 
 ## Step 7 — Captions
 
-Burned-in captions matter most on the vertical cut (most people watch muted). Transcribe the final voiceover for accurate timing:
+Burned-in captions matter most on the vertical cut (most people watch muted). Transcribe the final voiceover for accurate timing, as an `.ass` file for the pop style (big bold uppercase, the spoken word lights up yellow):
 
 ```bash
-python3 scripts/make_captions.py audio/vo_en.mp3 captions/vo_en.srt --lang en --words 4
+python3 scripts/make_captions.py audio/vo_en.mp3 captions/vo_en_9x16.ass --aspect 9:16 --lang en --words 3
+python3 scripts/make_captions.py audio/vo_en.mp3 captions/vo_en_16x9.ass --aspect 16:9 --lang en --words 5
 ```
 
-Use `--words 3` or `4` for 9:16 and `--words 8` for 16:9. The script explains how to get a Whisper model if the usual download hosts are blocked. Spot-check names — Whisper mangles foreign system names (it heard "Khordad 15" as "Cordad 15"); fix them in the .srt.
+Make one per aspect (the sizes differ). Use `.srt` instead if the user wants plain subtitles. The script explains how to get a Whisper model if the usual download hosts are blocked. Spot-check names — Whisper mangles foreign system names (it heard "Khordad 15" as "Cordad 15"); fix them in the .srt.
 
 ## Step 8 — Assemble
 
@@ -118,7 +125,7 @@ python3 scripts/build_video.py <project>/shots_16x9.json
 python3 scripts/build_video.py <project>/shots_9x16.json
 ```
 
-It normalizes every shot to the target frame, animates stills, fits the total to the voiceover length, mixes VO + ducked music + SFX, burns captions and an optional handle watermark, and writes an H.264/AAC mp4.
+It normalizes every shot to the target frame, animates stills, adds the transitions and shake, fits the total to the voiceover length, mixes VO + ducked music + SFX + cut whooshes, burns captions and an optional handle watermark, and writes an H.264/AAC mp4.
 
 Then check it yourself before handing it over: pull a contact sheet (`ffmpeg -i out.mp4 -vf "fps=1/10,scale=480:-1,tile=4x4" sheet.jpg`) and look at it, and confirm duration with `ffprobe`.
 

@@ -8,11 +8,11 @@ For 9:16, add "vertical composition, subject centered". Always "no text" — tex
 
 ## MAP — 3D terrain with flight paths
 
-The signature shot. Generate as stills and let the build script slow-zoom them, or as short video for the opening shot.
+The signature shot. Generate a clean terrain image with no overlays, then animate the paths, targets, radar and countdown with `scripts/make_map.py` (exact, and they move):
 
-> `3D satellite terrain render of arid mountains and dry riverbeds seen from a high oblique angle, a glowing yellow dotted flight path snaking low through the valleys toward a red circular target marker, a red dashed arc showing a radar coverage boundary, military briefing visualization style, ` + style suffix
+> `3D satellite terrain render of arid mountains and dry riverbeds seen from a high oblique angle, clear daylight, sharp detail, no lines, no markers, no text, ` + style suffix
 
-Variants: "twelve thin glowing yellow lines in loose formation", "red pulsing target reticle over an industrial complex", "red dome-shaped radar coverage over a ridge".
+Make 2–3 terrain images per video (approach, defended zone, target area) and reuse them with different paths so the geography feels consistent.
 
 ## BROLL — cinematic action
 
