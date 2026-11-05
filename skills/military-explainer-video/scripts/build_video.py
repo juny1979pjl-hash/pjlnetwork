@@ -28,7 +28,7 @@ Per shot:
   file      image (.png/.jpg/.webp) or video (.mp4/.mov/.webm; a short clip holds its last frame)
   duration  relative length in seconds (default 4). All durations are scaled together so
             the video ends 0.6 s after the voiceover — you don't need exact timings.
-  motion    stills only: zoom_in (default), zoom_out, pan_left, pan_right, none
+  motion    stills only: zoom_in (default), zoom_out, punch (fast hit-zoom, for action), pan_left, pan_right, none
   fit       crop (default: fill the frame, cut edges) or blur (whole image over a blurred
             copy — use for 16:9 material in a 9:16 video)
   sfx       optional sound effect starting at this shot; sfx_db sets its level (default -6)
@@ -72,7 +72,9 @@ def fit_filter(fit, w, h):
 
 def motion_filter(motion, frames, w, h, fps):
     n = max(frames - 1, 1)
+    k = max(int(fps * 0.35), 1)  # punch: fast 25% zoom in the first ~0.35 s, then a slow creep
     z = {"zoom_in": f"1+0.12*on/{n}", "zoom_out": f"1.12-0.12*on/{n}",
+         "punch": f"if(lt(on,{k}),1+0.25*on/{k},1.25+0.08*(on-{k})/{n})",
          "pan_left": "1.12", "pan_right": "1.12", "none": "1"}[motion]
     x = {"pan_left": f"(iw-iw/zoom)*(1-on/{n})", "pan_right": f"(iw-iw/zoom)*on/{n}"}.get(
         motion, "iw/2-(iw/zoom/2)")
