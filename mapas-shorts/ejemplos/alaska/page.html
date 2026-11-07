@@ -1,0 +1,230 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:M;font-weight:800;src:url(node_modules/@fontsource/montserrat/files/montserrat-latin-800-normal.woff2)}
+@font-face{font-family:M;font-weight:900;src:url(node_modules/@fontsource/montserrat/files/montserrat-latin-900-normal.woff2)}
+html,body{margin:0;background:#000}
+canvas{display:block}
+</style>
+<script src="node_modules/d3-array/dist/d3-array.min.js"></script>
+<script src="node_modules/d3-geo/dist/d3-geo.min.js"></script>
+<script src="node_modules/topojson-client/dist/topojson-client.min.js"></script>
+</head><body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script>
+const W=1080,H=1920,cx=W/2,cy=860;
+const c=document.getElementById('c'),g=c.getContext('2d');
+let world,countries={},alaska,lower48,graticule=d3.geoGraticule10();
+const C={ocean1:'#0b1f3a',ocean2:'#061226',land:'#2a3b52',border:'#0b1f3a',rus:'#d64545',usa:'#3d7bdc',can:'#e58fb0',uk:'#e58fb0',gold:'#ffc531',white:'#fff'};
+
+window.init=async(scenes,durs)=>{
+  world=await (await fetch('node_modules/world-atlas/countries-50m.json')).json();
+  const fc=topojson.feature(world,world.objects.countries);
+  fc.features.forEach(f=>countries[f.id]=f);
+  const usa=countries['840'];
+  const ak=[],l48=[];
+  usa.geometry.coordinates.forEach(poly=>{
+    const pts=poly[0];
+    const isAK=pts.some(([x,y])=>y>51&&(x<-129||x>170));
+    (isAK?ak:l48).push(poly);
+  });
+  alaska={type:'Feature',geometry:{type:'MultiPolygon',coordinates:ak}};
+  lower48={type:'Feature',geometry:{type:'MultiPolygon',coordinates:l48}};
+  window.S=scenes; window.D=durs;
+  let t=0; window.T=durs.map(d=>{const s=t;t+=d;return [s,t]});
+  window.TOTAL=t;
+  await document.fonts.load('900 60px M');await document.fonts.load('800 60px M');
+  return t;
+};
+
+// helpers
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const lerp=(a,b,k)=>a+(b-a)*k;
+const mix=(c1,c2,k)=>{const p=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));const a=p(c1),b=p(c2);return 'rgb('+a.map((v,i)=>Math.round(lerp(v,b[i],k))).join(',')+')'};
+
+// camera keyframes per scene: [lon, lat, scale]
+const CAM=[
+  [-152,62,1500],   // hook - Alaska
+  [-178,62,1150],   // rusia - Bering
+  [-95,88,560],     // crimea - pole view (Moscow + Alaska + Canada)
+  [-60,75,600],     // miedo - UK + Canada + Alaska
+  [-152,62,1450],   // compra
+  [-152,64,1700],   // locura
+  [-150,64,1600],   // oro
+  [-169,65.8,7000], // cierre - Bering Strait
+];
+function cam(t){
+  // smooth transition during the first 1.2s of each scene
+  let i=T.findIndex(([a,b])=>t>=a&&t<b); if(i<0)i=T.length-1;
+  const k=ease(clamp((t-T[i][0])/1.3));
+  const p=CAM[Math.max(0,i-1)],q=CAM[i];
+  const interp=d3.geoInterpolate([p[0],p[1]],[q[0],q[1]])(k);
+  // scale in log space; for last scene push in slowly
+  let s=Math.exp(lerp(Math.log(p[2]),Math.log(q[2]),k));
+  if(i===7) s*=1+0.15*clamp((t-T[i][0])/D[i]);
+  if(i===0) s*=1+0.06*clamp((t-T[i][0])/D[i]);
+  return {lon:interp[0],lat:interp[1],s,i,local:t-T[i][0]};
+}
+
+function fill(path,f,col){g.beginPath();path(f);g.fillStyle=col;g.fill();}
+function stroke(path,f,col,w){g.beginPath();path(f);g.strokeStyle=col;g.lineWidth=w;g.stroke();}
+
+function text(str,x,y,size,col='#fff',opts={}){
+  g.save();g.font=`${opts.w||900} ${size}px M`;g.textAlign=opts.align||'center';g.textBaseline='middle';
+  if(opts.rot){g.translate(x,y);g.rotate(opts.rot);x=0;y=0;}
+  g.lineJoin='round';g.lineWidth=opts.stroke??size*0.16;g.strokeStyle=opts.sc||'rgba(0,0,0,.85)';
+  if(g.lineWidth>0)g.strokeText(str,x,y);g.fillStyle=col;g.fillText(str,x,y);g.restore();
+}
+function pill(str,x,y,size,bg,fg='#fff'){
+  g.save();g.font=`900 ${size}px M`;const w=g.measureText(str).width+size*1.1,h=size*1.6;
+  g.fillStyle=bg;g.beginPath();g.roundRect(x-w/2,y-h/2,w,h,h/2);g.fill();
+  g.fillStyle=fg;g.textAlign='center';g.textBaseline='middle';g.fillText(str,x,y+2);g.restore();
+}
+function dot(p,r,col,pulse=0){
+  if(!p)return;g.beginPath();g.arc(p[0],p[1],r,0,7);g.fillStyle=col;g.fill();
+  if(pulse){g.beginPath();g.arc(p[0],p[1],r+pulse*40,0,7);g.strokeStyle=col;g.globalAlpha=1-pulse;g.lineWidth=5;g.stroke();g.globalAlpha=1;}
+}
+function arc(proj,path,a,b,k,col,w=10,dash=null){
+  const line={type:'LineString',coordinates:[a,b]};
+  const interp=d3.geoInterpolate(a,b);const n=60,m=Math.max(1,Math.round(n*k));
+  const coords=[];for(let j=0;j<=m;j++)coords.push(interp(j/n));
+  g.save();if(dash)g.setLineDash(dash);
+  stroke(path,{type:'LineString',coordinates:coords},col,w);g.restore();
+  if(k>0.02){const tip=proj(coords[coords.length-1]);const pr=proj(coords[Math.max(0,coords.length-3)]);
+    if(tip&&pr){const ang=Math.atan2(tip[1]-pr[1],tip[0]-pr[0]);g.save();g.translate(tip[0],tip[1]);g.rotate(ang);
+      g.beginPath();g.moveTo(10,0);g.lineTo(-26,-20);g.lineTo(-26,20);g.closePath();g.fillStyle=col;g.fill();g.restore();}}
+}
+
+window.draw=(t)=>{
+  const {lon,lat,s,i,local}=cam(t);
+  const proj=d3.geoOrthographic().rotate([-lon,-lat]).scale(s).translate([cx,cy]).clipAngle(90).precision(0.5);
+  const path=d3.geoPath(proj,g);
+  // background
+  const bg=g.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#030a17');bg.addColorStop(1,'#071833');
+  g.fillStyle=bg;g.fillRect(0,0,W,H);
+  // sphere
+  const sg=g.createRadialGradient(cx-s*.3,cy-s*.3,s*.1,cx,cy,s);sg.addColorStop(0,C.ocean1);sg.addColorStop(1,C.ocean2);
+  g.save();g.shadowColor='rgba(80,160,255,.45)';g.shadowBlur=60;fill(path,{type:'Sphere'},sg);g.restore();
+  stroke(path,graticule,'rgba(255,255,255,.06)',2);
+
+  const sceneId=S[i].id;
+  // base land
+  for(const id in countries){fill(path,countries[id],C.land);}
+  // colors per scene
+  const kIn=ease(clamp(local/1.0));
+  let akCol=C.usa, rusCol=C.land, canCol=C.land, ukCol=C.land, l48Col=C.usa;
+  if(sceneId==='hook'){akCol=mix('#3d7bdc','#ffc531',(Math.sin(t*5)+1)/2*.8);canCol='#4a5a70';}
+  if(sceneId==='rusia'){rusCol=mix(C.land,C.rus,kIn);akCol=mix(C.usa,C.rus,ease(clamp((local-2.2)/1)));l48Col=C.land;}
+  if(sceneId==='crimea'){rusCol=C.rus;akCol=C.rus;l48Col=C.land;canCol=mix(C.land,C.can,ease(clamp((local-4.5)/1)));ukCol=canCol;}
+  if(sceneId==='miedo'){rusCol=C.rus;akCol=C.rus;l48Col=mix(C.land,C.usa,ease(clamp((local-4.5)/1)));
+    const p=(Math.sin(t*6)+1)/2;canCol=mix(C.can,'#ff5d8f',p*.6);ukCol=canCol;}
+  if(sceneId==='compra'){rusCol=C.rus;l48Col=C.usa;akCol=mix(C.rus,C.usa,ease(clamp((local-0.8)/1.5)));}
+  if(sceneId==='locura'){rusCol=C.rus;akCol=mix(C.usa,'#cfe8ff',ease(clamp(local/1)));}
+  if(sceneId==='oro'){rusCol=C.rus;akCol=C.usa;}
+  if(sceneId==='cierre'){rusCol=C.rus;akCol=C.usa;}
+  fill(path,countries['643'],rusCol);
+  fill(path,countries['124'],canCol);
+  fill(path,countries['826'],ukCol);
+  fill(path,lower48,l48Col);
+  fill(path,alaska,akCol);
+  for(const id in countries)stroke(path,countries[id],'rgba(5,15,35,.7)',1.5);
+  stroke(path,alaska,'rgba(255,255,255,.55)',2.5);
+
+  // overlays per scene
+  const P=ll=>{const p=proj(ll);const r=d3.geoRotation([-lon,-lat])(ll);return (d3.geoDistance(ll,[lon,lat])<Math.PI/2)?p:null};
+  if(sceneId==='hook'){
+    text('¿POR QUÉ ALASKA',cx,200,92,'#fff');text('ES DE EE. UU.?',cx,310,92,C.gold);
+    const pa=P([-152,64.5]);if(pa)pill('ALASKA',pa[0],pa[1],52,'rgba(0,0,0,.55)');
+    const pc=P([-120,60]);if(pc)text('CANADÁ',pc[0],pc[1],46,'#dfe6f0',{w:800});
+  }
+  if(sceneId==='rusia'){
+    pill('SIGLO XVIII',cx,220,64,C.rus);
+    arc(proj,path,[160,58],[-152,60],ease(clamp((local-0.6)/2)),C.gold,12);
+    const pr=P([150,64]);if(pr&&local>.5)text('RUSIA',pr[0],pr[1],58);
+    if(local>2.6){const pa=P([-152,65]);if(pa)pill('AMÉRICA RUSA',pa[0],pa[1],48,'rgba(160,20,20,.9)');}
+    if(local>4.4){const po=P([-160,56]);if(po){g.font='110px serif';g.textAlign='center';g.fillText('🦦',po[0],po[1]);} }
+  }
+  if(sceneId==='crimea'){
+    pill('1856 · GUERRA DE CRIMEA',cx,220,54,C.rus);
+    const mos=[37.6,55.75],anc=[-149.9,61.2];
+    const pm=P(mos);dot(pm,16,'#fff',(t*1.2)%1);if(pm)text('MOSCÚ',pm[0],pm[1]-50,44);
+    const k=ease(clamp((local-1.8)/2.2));
+    if(local>1.8){arc(proj,path,mos,anc,k,'#fff',8,[24,18]);}
+    if(local>3.6){const km=Math.round(d3.geoDistance(mos,anc)*6371/100)*100;
+      const mid=P(d3.geoInterpolate(mos,anc)(.5));if(mid)pill('≈ '+km.toLocaleString('es')+' km',mid[0],mid[1],50,'rgba(0,0,0,.7)');}
+    if(local>4.8){const pc=P([-105,60]);if(pc)text('CANADÁ BRITÁNICA',pc[0],pc[1],44,'#ffd6e4');}
+    const pa=P([-152,65]);if(pa)text('ALASKA',pa[0],pa[1]+60,44);
+  }
+  if(sceneId==='miedo'){
+    const uk=[-1.5,53],ak=[-150,63];
+    const pu=P(uk);if(pu)text('GRAN BRETAÑA',pu[0],pu[1]-60,44,'#ffd6e4');
+    arc(proj,path,uk,ak,ease(clamp((local-0.3)/2)),'#ff5d8f',12,[30,16]);
+    if(local>2.3){const pa=P(ak);if(pa)text('?',pa[0]+10,pa[1]-20,140,'#fff');}
+    if(local>4.5){pill('VENDER A EE. UU.',cx,220,62,C.usa);
+      const pus=P([-98,40]);if(pus)text('EE. UU.',pus[0],pus[1],52);}
+  }
+  if(sceneId==='compra'){
+    pill('1867',cx,200,80,C.gold,'#111');
+    const k=ease(clamp((local-1.2)/3));
+    const v=Math.round(7200000*k);
+    text('$'+v.toLocaleString('es-ES').replace(/\./g,'.'),cx,350,120,'#7dff9b');
+    if(local>4.6){pill('≈ 2 ¢ POR ACRE',cx,1390,58,'rgba(0,0,0,.7)');}
+    const pa=P([-152,64.5]);if(pa&&local>2)text('🇺🇸',pa[0],pa[1],110,'#fff',{stroke:0});
+  }
+  if(sceneId==='locura'){
+    const k=clamp(local/0.35);const sc=lerp(2.2,1,ease(k));
+    g.save();g.translate(cx,330);g.scale(sc,sc);g.globalAlpha=k;
+    g.strokeStyle='#ff3b3b';g.lineWidth=10;g.beginPath();g.roundRect(-430,-110,860,220,24);g.rotate(0);g.stroke();
+    text('«LA LOCURA',0,-45,78,'#ff3b3b',{stroke:0});text('DE SEWARD»',0,50,78,'#ff3b3b',{stroke:0});g.restore();
+    if(local>2.2){const pa=P([-152,64]);if(pa){text('🧊',pa[0],pa[1],150,'#fff',{stroke:0});pill('“CONGELADOR INÚTIL”',cx,1390,50,'rgba(0,0,0,.7)');}}
+  }
+  if(sceneId==='oro'){
+    const items=[[0.3,[-165.4,64.5],'🪙','ORO'],[2.2,[-148.4,70.3],'🛢️','PETRÓLEO']];
+    items.forEach(([at,ll,em,lab])=>{if(local>at){const p=P(ll);const k=ease(clamp((local-at)/.5));if(p){text(em,p[0],p[1],110*k,'#fff',{stroke:0});text(lab,p[0],p[1]+85,44*k);}}});
+    if(local>3.9){const k=ease(clamp((local-3.9)/.6));
+      g.save();g.translate(cx,300);g.scale(k,k);text('★ ESTADO 49 ★',0,0,90,C.gold);g.restore();pill('1959',cx,170,64,C.usa);}
+  }
+  if(sceneId==='cierre'){
+    const big=[-169.05,65.78],lit=[-168.93,65.76];
+    const ctr=P([-169.0,65.77]);
+    const pr=P([-175.2,66.9]),pu=P([-163.5,66.3]);
+    if(pr)text('RUSIA',pr[0],pr[1],50);if(pu)text('EE. UU.',pu[0],pu[1],50);
+    if(ctr&&local>0.8){
+      const k=ease(clamp((local-0.8)/0.6)),R=210*k,X=ctr[0],Y=ctr[1];
+      g.save();g.beginPath();g.arc(X,Y,R,0,7);g.fillStyle='#0d2a50';g.fill();g.clip();
+      // zoomed islands (approx. shapes): Big Diomede (RU) left, Little Diomede (US) right
+      g.fillStyle=C.rus;g.beginPath();g.ellipse(X-95*k,Y-10*k,62*k,95*k,0.35,0,7);g.fill();
+      g.fillStyle=C.usa;g.beginPath();g.ellipse(X+85*k,Y+20*k,40*k,52*k,0.3,0,7);g.fill();
+      g.setLineDash([16,12]);g.strokeStyle='#fff';g.lineWidth=4;g.beginPath();g.moveTo(X,Y-R);g.lineTo(X,Y+R);g.stroke();
+      g.restore();
+      g.beginPath();g.arc(X,Y,R,0,7);g.strokeStyle='#fff';g.lineWidth=8;g.stroke();
+      if(local>1.6){text('Diómedes Mayor',X-200,Y-R-40,34,'#ffd0d0',{w:800});text('Diómedes Menor',X+200,Y-R-40,34,'#cfe0ff',{w:800});
+        pill('< 4 km',X,Y+R+10,64,C.gold,'#111');}
+    }
+    text('ESTRECHO DE BERING',cx,200,64,'#fff');
+    if(local>4.2){text('¿LOCURA O LA MEJOR',cx,1300,62,'#fff');text('COMPRA DE LA HISTORIA?',cx,1380,62,C.gold);}
+  }
+
+  // caption (lower third) – words revealed progressively
+  const words=S[i].cap.split(' ');const n=Math.ceil(words.length*clamp(local/(D[i]*0.8)));
+  const shown=words.slice(0,Math.max(1,n));
+  g.font='800 54px M';const lines=[];let cur='';
+  for(const w of words){const tr=(cur?cur+' ':'')+w;if(g.measureText(tr).width>900&&cur){lines.push(cur);cur=w}else cur=tr;}
+  lines.push(cur);
+  let idx=0;const y0=1640-((lines.length-1)*72)/2;
+  g.save();g.fillStyle='rgba(0,0,0,.55)';const bh=lines.length*72+50;g.beginPath();g.roundRect(60,y0-60,W-120,bh,28);g.fill();g.restore();
+  lines.forEach((ln,li)=>{
+    const ws=ln.split(' ');g.font='800 54px M';
+    const full=g.measureText(ln).width;let x=cx-full/2;
+    ws.forEach(w=>{const vis=idx<shown.length;idx++;
+      const ww=g.measureText(w+' ').width;
+      g.save();g.textAlign='left';g.textBaseline='middle';g.globalAlpha=vis?1:0.18;
+      const hl=/^[\d$«¿]|COMPRARON|Rusia|Crimea|Seward|49|4|km|Bering/.test(w);
+      g.fillStyle=hl?C.gold:'#fff';g.fillText(w,x,y0+li*72);g.restore();x+=ww;});
+  });
+  // progress bar + watermark
+  g.fillStyle='rgba(255,255,255,.15)';g.fillRect(0,H-12,W,12);g.fillStyle=C.gold;g.fillRect(0,H-12,W*t/TOTAL,12);
+  text('Mapa: Natural Earth',W-30,H-40,22,'rgba(255,255,255,.45)',{align:'right',w:800,stroke:0});
+};
+</script></body></html>
