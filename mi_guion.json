@@ -1,0 +1,160 @@
+{
+  "metadata": {
+    "title": "El-hermano-de-la-herencia",
+    "aspect_ratio": "9:16",
+    "language": "es",
+    "visual_mode": "realista_documental",
+    "subtitulos": false,
+    "characters": [
+      {
+        "label": "hermana_cuidadora_herencia",
+        "description": "Ordinary Latin American woman in her mid 40s, slim and tired, a kind face with deep dark circles under her eyes and no makeup, black hair with a few grey strands tied in a low ponytail, wearing a faded mustard-yellow knitted cardigan with a small darned hole at the left elbow over a plain white cotton blouse, dark grey cotton trousers and worn black flat shoes, with NO lettering, NO numbers and NO printed graphics on any garment. natural available light, sharp focus, true-to-life skin texture and pores, lived-in worn environment, cluttered authentic props, blurred real crowd in the background, slightly desaturated warm grade, handheld phone camera at eye level, no cinematic color grading, no studio lighting, no beauty retouching",
+        "voice": "warm low Latin American female voice, tired and steady, speaks softly without rushing"
+      },
+      {
+        "label": "hermano_ausente_herencia",
+        "description": "Heavy-set Latin American man in his early 50s, a round flushed face with a thin moustache and slicked-back black hair shiny with gel, a thick gold-toned chain half-buried in his neck, bread crumbs on his chest, wearing a shiny teal polyester short-sleeved shirt stretched tight over a large belly with the buttons straining and gaping, beige trousers and shiny brown loafers, with NO lettering, NO numbers and NO printed graphics on any garment. natural available light, sharp focus, true-to-life skin texture and pores, lived-in worn environment, cluttered authentic props, blurred real crowd in the background, slightly desaturated warm grade, handheld phone camera at eye level, no cinematic color grading, no studio lighting, no beauty retouching",
+        "voice": "loud confident middle-aged Latin American male voice, slightly hoarse, smug, talks while chewing"
+      },
+      {
+        "label": "notario_herencia",
+        "description": "Thin elderly Latin American man in his 60s, neatly combed white hair, a serious calm face, wearing a plain charcoal-grey suit jacket with a navy tie and clear wire-rimmed reading glasses, a light blue shirt, with NO lettering, NO numbers and NO printed graphics on any garment. natural available light, sharp focus, true-to-life skin texture and pores, lived-in worn environment, cluttered authentic props, blurred real crowd in the background, slightly desaturated warm grade, handheld phone camera at eye level, no cinematic color grading, no studio lighting, no beauty retouching",
+        "voice": "calm formal elderly Latin American male voice, measured and neutral, clear diction"
+      }
+    ],
+    "set_references": {
+      "set_casa_mama_herencia": "The small modest living room of an old working-class Latin American house, a worn brown velvet armchair with a crocheted doily on the headrest, an empty single hospital-style bed pushed against the wall with folded blankets, a small wooden side table with pill bottles without labels, a wall hook by the door, peeling pale blue painted walls, a plastic chair, lace curtains, a window to a sunny patio, NO people, no readable text, no lettering, no photos with faces, no brand labels anywhere. natural available light, sharp focus, lived-in worn environment, cluttered authentic props, slightly desaturated warm grade, handheld phone camera at eye level, no cinematic color grading, no studio lighting",
+      "set_notaria_herencia": "A cramped old notary office in a Latin American town, a heavy dark wooden desk with stacks of plain beige folders, an old desk lamp, two worn upholstered chairs facing the desk, tall shelves of plain unlabeled binders, a ceiling fan, beige walls, a window with venetian blinds, NO people, no readable text, no lettering, no diplomas, no brand labels anywhere. natural available light, sharp focus, lived-in worn environment, cluttered authentic props, slightly desaturated warm grade, handheld phone camera at eye level, no cinematic color grading, no studio lighting"
+    }
+  },
+  "scenes": [
+    {
+      "scene": 1,
+      "beat": "INJUSTICIA",
+      "characters_in_scene": [
+        "hermano_ausente_herencia",
+        "hermana_cuidadora_herencia"
+      ],
+      "media_model": "Omni Flash",
+      "duration": "8s",
+      "image_model": "Nano Banana 2",
+      "media_prompt": "Render a medium two-shot, vertical 9:16. Photorealistic candid observational documentary footage of ordinary working-class Latin American people, filmed by a bystander at eye level. Inside @set_casa_mama_herencia, @hermano_ausente_herencia sits on the left sprawled in the brown velvet armchair with his legs stretched out, holding a half-eaten sweet bread roll, smug half-smile; @hermana_cuidadora_herencia stands on the right beside the empty bed folding a blanket against her chest, mouth closed, eyes down. Eye-level camera, flat bright late-morning daylight through the window, slightly desaturated warm grade. natural available light, sharp focus, true-to-life skin texture and pores, lived-in worn environment, cluttered authentic props, blurred real crowd in the background, slightly desaturated warm grade, handheld phone camera at eye level, no cinematic color grading, no studio lighting, no beauty retouching",
+      "motion_prompt": "CLIP 1 of 10 - 8s - 9:16\nUse the attached frame as the composition, identity and wardrobe reference.\n\nSHOT: Eye-level handheld shot that slowly pushes in from the two-shot toward a chest-up framing of the heavy man on the left. No cuts.\n\nACTION - timestamped beats (reset to 00:00 for this clip):\n00:00-00:01: The heavy man on the left takes a big bite of the sweet bread and brushes crumbs off his shirt onto the floor.\n00:01-00:07: He speaks continuously with his mouth half full, waving the bread toward the room. The woman on the right does not speak, only reacts; she keeps folding the blanket slowly.\n00:07-00:08: He leans back further in the armchair and crosses his ankles.\n\nAUDIO:\nThe heavy man on the left, with a loud confident middle-aged Latin American male voice, slightly hoarse, smug, talks while chewing, speaks aloud in Latin American Spanish: \"Ya llegué, hermanita. Tranquila, aquí el que sabe de estas cosas soy yo. Esta casa se vende, y mitad para cada quien. Eso es lo justo.\"\nTone: falsa generosidad, se siente el héroe que viene a poner orden.\nSFX/Ambience: chewing, crumbs falling, blanket fabric rustling, a wall clock ticking, a dog barking far away, a bus passing on the street outside. Music: No music.\n\nNegative Constraints: only one character speaks, the other keeps their mouth closed; no subtitles, no caption bars, no on-screen text, no readable signs or lettering in the scene, no readable text on papers, no misspelled or invented words, no morphing, no wardrobe changes, consistent faces, no camera cuts, no watermark.\nKeep faces, wardrobe, framing and lighting identical to the attached frame.\nOutput: 8s, 720p, 9:16."
+    },
+    {
+      "scene": 2,
+      "beat": "AGUANTE",
+      "characters_in_scene": [
+        "hermana_cuidadora_herencia",
+        "hermano_ausente_herencia"
+      ],
+      "media_model": "Omni Flash",
+      "duration": "8s",
+      "image_model": "Nano Banana 2",
+      "media_prompt": "Render a medium shot, vertical 9:16. Photorealistic candid observational documentary footage of ordinary working-class Latin American people, filmed by a bystander at eye level. Inside @set_casa_mama_herencia, @hermana_cuidadora_herencia stands on the right in the foreground holding a folded blanket and a small unlabeled pill bottle, looking down at the empty bed with tired wet eyes; @hermano_ausente_herencia is out of focus on the left in the background, sitting in the armchair looking at his phone, mouth closed. Eye-level camera, flat bright late-morning daylight through the window, slightly desaturated warm grade. natural available light, sharp focus, true-to-life skin texture and pores, lived-in worn environment, cluttered authentic props, blurred real crowd in the background, slightly desaturated warm grade, handheld phone camera at eye level, no cinematic color grading, no studio lighting, no beauty retouching",
+      "motion_prompt": "CLIP 2 of 10 - 8s - 9:16\nUse the attached frame as the composition, identity and wardrobe reference.\n\nSHOT: Eye-level handheld shot that slowly pushes in toward a chest-up framing of the woman on the right, the man staying blurred behind her. No cuts.\n\nACTION - timestamped beats (reset to 00:00 for this clip):\n00:00-00:01: The woman on the right sets the pill bottle down on the side table.\n00:01-00:07: She speaks continuously in a low inner-thought voice while smoothing the blanket on the empty bed. The man in the background does not speak, only scrolls on his phone.\n00:07-00:08: She closes her eyes for a moment and breathes out.\n\nAUDIO:\nThe tired woman on the right, with a warm low Latin American female voice, tired and steady, speaks softly without rushing, speaks aloud in Latin American Spanish: \"Diez años dándole sus pastillas, durmiendo en esa silla. Él nunca llamó. Pero hoy no voy a pelear. Hoy apenas la despedimos.\"\nTone: cansancio contenido, dolor callado, todavía no se defiende.\nSFX/Ambience: the blanket smoothed by hand, a pill bottle set on wood, a wall clock ticking, a dog barking far away, a bus passing on the street outside. Music: No music.\n\nNegative Constraints: only one character speaks, the other keeps their mouth closed; no subtitles, no caption bars, no on-screen text, no readable signs or lettering in the scene, no readable text on papers, no misspelled or invented words, no morphing, no wardrobe changes, consistent faces, no camera cuts, no watermark.\nKeep faces, wardrobe, framing and lighting identical to the attached frame.\nOutput: 8s, 720p, 9:16."
+    },
+    {
+      "scene": 3,
+      "beat": "CREENCIA FALSA",
+      "characters_in_scene": [
+        "hermano_ausente_herencia"
+      ],
+      "media_model": "Omni Flash",
+      "duration": "10s",
+      "image_model": "Nano Banana 2",
+      "media_prompt": "Render a medium shot, vertical 9:16. Photorealistic candid observational documentary footage of ordinary working-class Latin American people, filmed by a bystander at eye level. Inside @set_casa_mama_herencia, @hermano_ausente_herencia stands alone in the middle of the living room, one puffy hand flat on the peeling pale blue wall as if measuring it, looking around the room with a greedy satisfied smile. Eye-level camera, flat bright late-morning daylight through the window, slightly desaturated warm grade. natural available light, sharp focus, true-to-life skin texture and pores, lived-in worn environment, cluttered authentic props, blurred real crowd in the background, slightly desaturated warm grade, handheld phone camera at eye level, no cinematic color grading, no studio lighting, no beauty retouching",
+      "motion_prompt": "CLIP 3 of 10 - 10s - 9:16\nUse the attached frame as the composition, identity and wardrobe reference.\n\nSHOT: Static eye-level shot with subtle handheld drift. No cuts.\n\nACTION - timestamped beats (reset to 00:00 for this clip):\n00:00-00:01: The heavy man knocks twice on the wall with his knuckles, listening.\n00:01-00:09: He speaks continuously to himself while walking slowly along the wall and tapping it, nodding as if calculating a price.\n00:09-00:10: He stops, hands on his hips, and smiles at the room.\n\nAUDIO:\nThe heavy man in the center, with a loud confident middle-aged Latin American male voice, slightly hoarse, smug, talks while chewing, speaks aloud in Latin American Spanish: \"Los papeles no mienten. Soy el hijo mayor. A mamá la podía cuidar cualquiera, pero la casa es de los dos. Rosita no sabe de negocios. Yo sí.\"\nTone: arrogante y cómodo, convencido de que la ley está de su lado.\nSFX/Ambience: knuckles knocking on a hollow wall, slow footsteps on tile, a wall clock ticking, a dog barking far away, a bus passing on the street outside. Music: No music.\n\nNegative Constraints: only this one character appears and speaks; no subtitles, no caption bars, no on-screen text, no readable signs or lettering in the scene, no misspelled or invented words, no morphing, no wardrobe changes, consistent face, no camera cuts, no watermark.\nKeep faces, wardrobe, framing and lighting identical to the attached frame.\nOutput: 10s, 720p, 9:16."
+    },
+    {
+      "scene": 4,
+      "beat": "ESCALADA 1",
+      "characters_in_scene": [
+        "hermano_ausente_herencia",
+        "hermana_cuidadora_herencia"
+      ],
+      "media_model": "Omni Flash",
+      "duration": "8s",
+      "image_model": "Nano Banana 2",
+      "media_prompt": "Render a medium two-shot, vertical 9:16. Photorealistic candid observational documentary footage of ordinary working-class Latin American people, filmed by a bystander at eye level. Inside @set_casa_mama_herencia, by the door, @hermano_ausente_herencia stands on the left lifting a ring of old house keys tied with a faded red string off the wall hook, dangling it in front of her with a mocking smile; @hermana_cuidadora_herencia stands on the right with one hand half raised toward the keys, mouth closed, shocked. Eye-level camera, flat bright late-morning daylight through the window, slightly desaturated warm grade. natural available light, sharp focus, true-to-life skin texture and pores, lived-in worn environment, cluttered authentic props, blurred real crowd in the background, slightly desaturated warm grade, handheld phone camera at eye level, no cinematic color grading, no studio lighting, no beauty retouching",
+      "motion_prompt": "CLIP 4 of 10 - 8s - 9:16\nUse the attached frame as the composition, identity and wardrobe reference.\n\nSHOT: Eye-level handheld shot that slowly pushes in from the two-shot toward a chest-up framing of the heavy man on the left. No cuts.\n\nACTION - timestamped beats (reset to 00:00 for this clip):\n00:00-00:01: The heavy man on the left jingles the ring of keys with the red string.\n00:01-00:07: He speaks continuously while slipping the keys into his trouser pocket and giving her two patronizing pats on the shoulder. The woman on the right does not speak, only reacts; she lowers her hand slowly.\n00:07-00:08: He pats his pocket where the keys are and grins.\n\nAUDIO:\nThe heavy man on the left, with a loud confident middle-aged Latin American male voice, slightly hoarse, smug, talks while chewing, speaks aloud in Latin American Spanish: \"Las llaves me las quedo yo, mija. Mañana viene un comprador. Tú renta un cuartito, a tu edad ya no necesitas tanto espacio.\"\nTone: condescendiente, sarcasmo disfrazado de consejo.\nSFX/Ambience: keys jingling, a pocket rustling, a pat on a shoulder, a wall clock ticking, a dog barking far away, a bus passing on the street outside. Music: No music.\n\nNegative Constraints: only one character speaks, the other keeps their mouth closed; no subtitles, no caption bars, no on-screen text, no readable signs or lettering in the scene, no readable text on papers, no misspelled or invented words, no morphing, no wardrobe changes, consistent faces, no camera cuts, no watermark.\nKeep faces, wardrobe, framing and lighting identical to the attached frame.\nOutput: 8s, 720p, 9:16."
+    },
+    {
+      "scene": 5,
+      "beat": "ESCALADA 2",
+      "characters_in_scene": [
+        "hermano_ausente_herencia",
+        "hermana_cuidadora_herencia"
+      ],
+      "media_model": "Omni Flash",
+      "duration": "8s",
+      "image_model": "Nano Banana 2",
+      "media_prompt": "Render a medium two-shot, vertical 9:16. Photorealistic candid observational documentary footage of ordinary working-class Latin American people, filmed by a bystander at eye level. Inside @set_casa_mama_herencia, @hermano_ausente_herencia stands on the left at the window pointing out toward the sunny patio with one hand while eating the last bite of sweet bread with the other; @hermana_cuidadora_herencia sits on the right on the plastic chair beside the empty bed, hands in her lap, mouth closed, staring at him. Eye-level camera, flat bright late-morning daylight through the window, slightly desaturated warm grade. natural available light, sharp focus, true-to-life skin texture and pores, lived-in worn environment, cluttered authentic props, blurred real crowd in the background, slightly desaturated warm grade, handheld phone camera at eye level, no cinematic color grading, no studio lighting, no beauty retouching",
+      "motion_prompt": "CLIP 5 of 10 - 8s - 9:16\nUse the attached frame as the composition, identity and wardrobe reference.\n\nSHOT: Eye-level handheld shot that slowly pushes in from the two-shot toward a chest-up framing of the heavy man on the left. No cuts.\n\nACTION - timestamped beats (reset to 00:00 for this clip):\n00:00-00:01: The heavy man on the left swallows the last bite and points out the window.\n00:01-00:07: He speaks continuously, sweeping his hand across the patio as if he owned it. The woman on the right does not speak, only reacts; her hands grip each other tighter.\n00:07-00:08: He dusts the crumbs off his hands onto the windowsill.\n\nAUDIO:\nThe heavy man on the left, with a loud confident middle-aged Latin American male voice, slightly hoarse, smug, talks while chewing, speaks aloud in Latin American Spanish: \"Y el terreno de atrás también se vende. Con eso pongo mi negocio. Para algo soy el listo. Tú nomás sabes cuidar viejitos.\"\nTone: ambición sin filtro, desprecio por el trabajo de ella.\nSFX/Ambience: hands dusting crumbs, a window latch, birds in the patio, a wall clock ticking, a dog barking far away, a bus passing on the street outside. Music: No music.\n\nNegative Constraints: only one character speaks, the other keeps their mouth closed; no subtitles, no caption bars, no on-screen text, no readable signs or lettering in the scene, no readable text on papers, no misspelled or invented words, no morphing, no wardrobe changes, consistent faces, no camera cuts, no watermark.\nKeep faces, wardrobe, framing and lighting identical to the attached frame.\nOutput: 8s, 720p, 9:16."
+    },
+    {
+      "scene": 6,
+      "beat": "EL LIMITE",
+      "characters_in_scene": [
+        "hermana_cuidadora_herencia"
+      ],
+      "media_model": "Omni Flash",
+      "duration": "8s",
+      "image_model": "Nano Banana 2",
+      "media_prompt": "Render a close-up, vertical 9:16. Photorealistic candid observational documentary footage of ordinary working-class Latin American people, filmed by a bystander at eye level. Inside @set_casa_mama_herencia, at dusk, @hermana_cuidadora_herencia sits alone on the edge of the empty bed holding a plain sealed white envelope with both hands, her face now firm and dry-eyed, looking straight ahead with quiet resolve. Eye-level camera, dim orange dusk light through the window and one weak ceiling bulb, slightly desaturated warm grade. natural available light, sharp focus, true-to-life skin texture and pores, lived-in worn environment, cluttered authentic props, blurred real crowd in the background, slightly desaturated warm grade, handheld phone camera at eye level, no cinematic color grading, no studio lighting, no beauty retouching",
+      "motion_prompt": "CLIP 6 of 10 - 8s - 9:16\nUse the attached frame as the composition, identity and wardrobe reference.\n\nSHOT: Static eye-level shot with subtle handheld drift. No cuts.\n\nACTION - timestamped beats (reset to 00:00 for this clip):\n00:00-00:01: The woman turns the sealed white envelope over in her hands.\n00:01-00:07: She speaks continuously in a low firm inner-thought voice, holding the envelope against her chest.\n00:07-00:08: She stands up from the bed holding the envelope.\n\nAUDIO:\nThe woman sitting on the bed, with a warm low Latin American female voice, tired and steady, speaks softly without rushing, speaks aloud in Latin American Spanish: \"Eso no es justicia. Es aprovecharse. Mamá me dejó este sobre para este día. Mañana lo llevo con el notario. Que hable el papel.\"\nTone: decisión tranquila, se acabó el aguante.\nSFX/Ambience: an envelope handled, the bed creaking, crickets outside, a distant radio.  Music: No music.\n\nNegative Constraints: only this one character appears and speaks; no subtitles, no caption bars, no on-screen text, no readable signs or lettering in the scene, no misspelled or invented words, no morphing, no wardrobe changes, consistent face, no camera cuts, no watermark.\nKeep faces, wardrobe, framing and lighting identical to the attached frame.\nOutput: 8s, 720p, 9:16."
+    },
+    {
+      "scene": 7,
+      "beat": "LA SEPARACION",
+      "characters_in_scene": [
+        "hermana_cuidadora_herencia",
+        "notario_herencia"
+      ],
+      "media_model": "Omni Flash",
+      "duration": "8s",
+      "image_model": "Nano Banana 2",
+      "media_prompt": "Render a medium two-shot, vertical 9:16. Photorealistic candid observational documentary footage of ordinary working-class Latin American people, filmed by a bystander at eye level. Inside @set_notaria_herencia, @hermana_cuidadora_herencia sits on the right in a worn upholstered chair, back straight, sliding the plain white envelope across the desk with both hands; @notario_herencia sits on the left behind the heavy desk, reaching for it, mouth closed. Eye-level camera, flat bright daylight through the venetian blinds, slightly desaturated warm grade. natural available light, sharp focus, true-to-life skin texture and pores, lived-in worn environment, cluttered authentic props, blurred real crowd in the background, slightly desaturated warm grade, handheld phone camera at eye level, no cinematic color grading, no studio lighting, no beauty retouching",
+      "motion_prompt": "CLIP 7 of 10 - 8s - 9:16\nUse the attached frame as the composition, identity and wardrobe reference.\n\nSHOT: Eye-level handheld shot that slowly pushes in from the two-shot toward a chest-up framing of the woman on the right. No cuts.\n\nACTION - timestamped beats (reset to 00:00 for this clip):\n00:00-00:01: The woman on the right slides the white envelope across the desk.\n00:01-00:07: She speaks continuously with calm dignity, her hands resting on the desk. The elderly man on the left does not speak, only reacts; he opens the envelope and unfolds a plain paper.\n00:07-00:08: She folds her hands in her lap and waits.\n\nAUDIO:\nThe woman on the right, with a warm low Latin American female voice, tired and steady, speaks softly without rushing, speaks aloud in Latin American Spanish: \"Licenciado, esto lo firmó mi mamá. Yo no quiero pelear con nadie. Solo quiero que se respete lo que ella decidió.\"\nTone: digna, serena, sin rencor.\nSFX/Ambience: paper unfolding, a ceiling fan turning, a typewriter far away, street noise through the blinds. Music: No music.\n\nNegative Constraints: only one character speaks, the other keeps their mouth closed; no subtitles, no caption bars, no on-screen text, no readable signs or lettering in the scene, no readable text on papers, no misspelled or invented words, no morphing, no wardrobe changes, consistent faces, no camera cuts, no watermark.\nKeep faces, wardrobe, framing and lighting identical to the attached frame.\nOutput: 8s, 720p, 9:16."
+    },
+    {
+      "scene": 8,
+      "beat": "EL VACIO",
+      "characters_in_scene": [
+        "notario_herencia",
+        "hermano_ausente_herencia"
+      ],
+      "media_model": "Omni Flash",
+      "duration": "6s",
+      "image_model": "Nano Banana 2",
+      "media_prompt": "Render a medium two-shot, vertical 9:16. Photorealistic candid observational documentary footage of ordinary working-class Latin American people, filmed by a bystander at eye level. Inside @set_notaria_herencia, @notario_herencia sits on the left behind the desk holding up a plain folded paper, looking over his glasses; @hermano_ausente_herencia sits on the right in a worn chair, leaning forward with his mouth closed, his smug smile frozen and fading. Eye-level camera, flat bright daylight through the venetian blinds, slightly desaturated warm grade. natural available light, sharp focus, true-to-life skin texture and pores, lived-in worn environment, cluttered authentic props, blurred real crowd in the background, slightly desaturated warm grade, handheld phone camera at eye level, no cinematic color grading, no studio lighting, no beauty retouching",
+      "motion_prompt": "CLIP 8 of 10 - 6s - 9:16\nUse the attached frame as the composition, identity and wardrobe reference.\n\nSHOT: Eye-level handheld shot that slowly pushes in from the two-shot toward a chest-up framing of the elderly man on the left. No cuts.\n\nACTION - timestamped beats (reset to 00:00 for this clip):\n00:00-00:01: The elderly man on the left adjusts his glasses and looks at the paper.\n00:01-00:05: He speaks continuously in a formal procedural tone. The heavy man on the right does not speak, only reacts; his smile drops and he sinks back in the chair.\n00:05-00:06: The elderly man sets the paper down on the desk.\n\nAUDIO:\nThe elderly man on the left, with a calm formal elderly Latin American male voice, measured and neutral, clear diction, speaks aloud in Latin American Spanish: \"El testamento es claro, señor. La casa queda a nombre de su hermana, por los años que la cuidó.\"\nTone: neutral, procedimental, sin juicio.\nSFX/Ambience: paper set on wood, a ceiling fan turning, a chair creaking, street noise through the blinds. Music: No music.\n\nNegative Constraints: only one character speaks, the other keeps their mouth closed; no subtitles, no caption bars, no on-screen text, no readable signs or lettering in the scene, no readable text on papers, no misspelled or invented words, no morphing, no wardrobe changes, consistent faces, no camera cuts, no watermark.\nKeep faces, wardrobe, framing and lighting identical to the attached frame.\nOutput: 6s, 720p, 9:16."
+    },
+    {
+      "scene": 9,
+      "beat": "INTENTO FALLIDO",
+      "characters_in_scene": [
+        "hermano_ausente_herencia",
+        "hermana_cuidadora_herencia"
+      ],
+      "silent": true,
+      "media_model": "Omni Flash",
+      "duration": "4s",
+      "image_model": "Nano Banana 2",
+      "media_prompt": "Render a tight two-shot, vertical 9:16. Photorealistic candid observational documentary footage of ordinary working-class Latin American people, filmed by a bystander at eye level. Inside @set_casa_mama_herencia, by the door, @hermano_ausente_herencia stands on the left holding out the ring of old house keys with the faded red string, shoulders slumped, avoiding eye contact; @hermana_cuidadora_herencia stands on the right with her palm open, mouth closed, calm. Eye-level camera, flat bright late-morning daylight through the window, slightly desaturated warm grade. natural available light, sharp focus, true-to-life skin texture and pores, lived-in worn environment, cluttered authentic props, blurred real crowd in the background, slightly desaturated warm grade, handheld phone camera at eye level, no cinematic color grading, no studio lighting, no beauty retouching",
+      "motion_prompt": "CLIP 9 of 10 - 4s - 9:16 - WORDLESS BEAT, NOBODY SPEAKS\nUse the attached frame as the composition, identity and wardrobe reference.\n\nSHOT: Eye-level handheld shot, almost still, very slight drift down toward the keys. No cuts.\n\nACTION - timestamped beats (reset to 00:00 for this clip):\n00:00-00:02: The heavy man on the left hesitates, then drops the ring of keys into her open palm.\n00:02-00:04: The woman on the right closes her hand over the keys and hangs them back on the wall hook without looking at him.\n\nAUDIO:\nNobody speaks. There is no dialogue at all in this clip.\nSFX/Ambience: keys dropping into a hand, keys hung on a metal hook, a wall clock ticking. Music: No music.\n\nNegative Constraints: absolutely no dialogue, no voices, no whispering, no humming, both characters keep their mouths closed the whole clip; no subtitles, no caption bars, no on-screen text, no readable signs or lettering in the scene, no morphing, no wardrobe changes, consistent faces, no camera cuts, no watermark.\nKeep faces, wardrobe, framing and lighting identical to the attached frame.\nOutput: 4s, 720p, 9:16."
+    },
+    {
+      "scene": 10,
+      "beat": "MORALEJA",
+      "characters_in_scene": [
+        "hermano_ausente_herencia"
+      ],
+      "media_model": "Omni Flash",
+      "duration": "10s",
+      "image_model": "Nano Banana 2",
+      "media_prompt": "Render a medium close-up, vertical 9:16. Photorealistic candid observational documentary footage of ordinary working-class Latin American people, filmed by a bystander at eye level. Inside @set_casa_mama_herencia, @hermano_ausente_herencia sits alone on the plastic chair by the door, his shoulders slumped and his smug look gone, staring at the empty brown velvet armchair, holding nothing. Eye-level camera, flat bright late-morning daylight through the window, slightly desaturated warm grade. natural available light, sharp focus, true-to-life skin texture and pores, lived-in worn environment, cluttered authentic props, blurred real crowd in the background, slightly desaturated warm grade, handheld phone camera at eye level, no cinematic color grading, no studio lighting, no beauty retouching",
+      "motion_prompt": "CLIP 10 of 10 - 10s - 9:16\nUse the attached frame as the composition, identity and wardrobe reference.\n\nSHOT: Static eye-level shot with subtle handheld drift, slowly settling on his face. No cuts.\n\nACTION - timestamped beats (reset to 00:00 for this clip):\n00:00-00:01: The heavy man looks at the empty armchair and exhales.\n00:01-00:09: He speaks continuously, quietly, almost to himself, rubbing his hands together slowly.\n00:09-00:10: He stands up and walks out of the frame toward the door.\n\nAUDIO:\nThe heavy man sitting by the door, with a subdued middle-aged Latin American male voice, slightly hoarse, smug, speaks aloud in Latin American Spanish: \"Vine por la casa y me voy sin nada. La herencia no se gana con un apellido. Se gana estando, cuando nadie más quiso estar.\"\nTone: humilde por primera vez, arrepentido, sin dramatismo.\nSFX/Ambience: a wall clock ticking, a dog barking far away, a bus passing on the street outside. Music: No music.\n\nNegative Constraints: only this one character appears and speaks; no subtitles, no caption bars, no on-screen text, no readable signs or lettering in the scene, no misspelled or invented words, no morphing, no wardrobe changes, consistent face, no camera cuts, no watermark.\nKeep faces, wardrobe, framing and lighting identical to the attached frame.\nOutput: 10s, 720p, 9:16."
+    }
+  ]
+}
