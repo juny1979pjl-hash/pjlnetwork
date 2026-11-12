@@ -3,130 +3,179 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PJL NETWORK</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<title>PJL Network · Internet para tu casa en Puerto Rico</title>
+<meta name="description" content="Internet rápido y confiable en Puerto Rico. Planes de 15, 20 y 30 megas desde $40 al mes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+:root{
+  --bg:#f7f4ee;
+  --card:#fdfbf7;
+  --raised:#efe9df;
+  --text:#1f1b16;
+  --text-2:#5e554a;
+  --muted:#7b7266;
+  --line:rgba(31,27,22,.08);
+  --accent:#0066cc;
+  --accent-press:#0058b0;
+  --whatsapp:#1f9d55;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
 body{
-  font-family:Arial,sans-serif;
   margin:0;
-  background:#f4f4f4;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Figtree,system-ui,sans-serif;
+  font-size:15px;
+  line-height:22px;
+  -webkit-font-smoothing:antialiased;
 }
-header{
-  background:#0066cc;
-  color:white;
-  text-align:center;
-  padding:40px 20px;
+a{color:inherit}
+svg.i{width:18px;height:18px;flex:none;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.wrap{max-width:1120px;margin:0 auto;padding:0 32px}
+
+/* Navegación */
+nav{height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:18px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:10px}
+.logo-mark{width:24px;height:24px;border-radius:6px;background:var(--accent);display:grid;place-items:center}
+.logo-mark svg{width:16px;height:16px;stroke:#fff;stroke-width:2;fill:none;stroke-linecap:round}
+.nav-link{font-size:14px;font-weight:500;text-decoration:none;color:var(--text-2);display:flex;align-items:center;gap:8px;transition:color .15s var(--ease)}
+.nav-link:hover{color:var(--text)}
+
+/* Botones */
+.btn{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 20px;border-radius:10px;font-size:15px;font-weight:500;text-decoration:none;transition:background-color .15s var(--ease),transform .15s var(--ease)}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-press)}
+.btn-secondary{background:var(--card);color:var(--text);box-shadow:inset 0 0 0 1px var(--line)}
+.btn-secondary:hover{background:var(--raised)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Portada */
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;padding:64px 0 96px}
+h1{font-size:56px;line-height:1.05;font-weight:500;letter-spacing:-.03em;margin:0 0 20px}
+.sub{font-size:19px;line-height:29px;color:var(--text-2);margin:0 0 32px;max-width:32rem}
+.actions{display:flex;gap:12px;flex-wrap:wrap}
+
+/* Tarjeta de cobertura */
+.check{background:var(--card);border-radius:16px;padding:24px;box-shadow:inset 0 0 0 1px var(--line),0 8px 24px rgba(0,0,0,.06)}
+.check-title{font-size:15px;font-weight:500;margin:0 0 4px}
+.check-sub{font-size:14px;line-height:20px;color:var(--text-2);margin:0 0 20px}
+.bubble{background:var(--raised);border-radius:12px 12px 12px 4px;padding:12px 16px;font-size:14px;line-height:20px;margin:0 0 12px;max-width:88%}
+.pin{display:flex;align-items:center;gap:8px;background:var(--raised);border-radius:12px 12px 12px 4px;padding:12px 16px;font-size:14px;color:var(--text-2);width:max-content;margin:0 0 20px}
+.pin svg{color:var(--accent)}
+.check .btn{width:100%;justify-content:center}
+
+/* Planes */
+.plans{padding-bottom:128px}
+h2{font-size:32px;line-height:1.15;font-weight:500;letter-spacing:-.01em;margin:0 0 8px}
+.plans-sub{color:var(--text-2);margin:0 0 32px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.plan{background:var(--card);border-radius:16px;padding:24px;box-shadow:inset 0 0 0 1px var(--line);display:flex;flex-direction:column}
+.speed{font-family:var(--mono);font-size:40px;line-height:1;font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin:0}
+.speed small{font-size:14px;font-weight:400;color:var(--muted);letter-spacing:0;margin-left:6px}
+.meter{height:4px;border-radius:2px;background:var(--raised);margin:20px 0}
+.meter span{display:block;height:100%;border-radius:2px;background:var(--text)}
+.plan.lead .meter span{background:var(--accent)}
+.price{font-size:20px;font-weight:500;font-variant-numeric:tabular-nums;margin:0 0 8px}
+.price small{font-size:14px;font-weight:400;color:var(--muted)}
+.plan p.desc{color:var(--text-2);margin:0}
+
+/* Botón flotante de WhatsApp */
+.float{position:fixed;right:24px;bottom:24px;display:flex;align-items:center;gap:8px;height:48px;padding:0 20px;border-radius:24px;background:var(--whatsapp);color:#fff;font-weight:500;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.12);transition:background-color .15s var(--ease),transform .15s var(--ease)}
+.float:hover{background:#198a49}
+.float:active{transform:scale(.97)}
+
+footer{padding-top:32px;padding-bottom:112px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+
+/* Entrada */
+@media (prefers-reduced-motion:no-preference){
+  .hero > *{animation:rise .4s var(--ease) both}
+  .hero > *:nth-child(2){animation-delay:.06s}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 }
-section{
-  max-width:900px;
-  margin:auto;
-  padding:20px;
-}
-.card{
-  background:white;
-  padding:20px;
-  margin:15px 0;
-  border-radius:12px;
-  box-shadow:0 2px 8px rgba(0,0,0,.1);
-}
-.precio{
-  color:#0066cc;
-  font-size:24px;
-  font-weight:bold;
-}
-.whatsapp,
-.ubicacion,
-.agendar{
-  position:fixed;
-  right:20px;
-  color:white;
-  padding:15px 20px;
-  border-radius:50px;
-  text-decoration:none;
-  font-weight:bold;
-  box-shadow:0 3px 8px rgba(0,0,0,.3);
-  transition:all .3s ease;
-}
-.whatsapp{
-  bottom:20px;
-  background:#25D366;
-}
-.ubicacion{
-  bottom:85px;
-  background:#0066cc;
-}
-.agendar{
-  bottom:150px;
-  background:#ff9800;
-}
-.whatsapp:hover{
-  background:#1ebe5d;
-  transform:scale(1.08);
-}
-.ubicacion:hover{
-  background:#004c99;
-  transform:scale(1.08);
-}
-.agendar:hover{
-  background:#e68900;
-  transform:scale(1.08);
-}
-.whatsapp i,
-.ubicacion i,
-.agendar i{
-  margin-right:8px;
-}
-.whatsapp:hover i,
-.ubicacion:hover i,
-.agendar:hover i{
-  animation:icono .6s ease;
-}
-@keyframes icono{
-  0%{transform:scale(1);}
-  50%{transform:scale(1.4);}
-  100%{transform:scale(1);}
+
+@media (max-width:860px){
+  .wrap{padding:0 16px}
+  .hero{grid-template-columns:1fr;gap:40px;padding:48px 0 64px}
+  h1{font-size:40px}
+  .sub{font-size:17px;line-height:26px}
+  .grid{grid-template-columns:1fr}
+  .nav-link span{display:none}
+  .float{right:16px;bottom:16px}
 }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>PJL NETWORK</h1>
-  <p>Internet Rápido y Confiable</p>
+<header class="wrap">
+  <nav>
+    <a href="#" class="logo" aria-label="PJL Network">
+      <span class="logo-mark"><svg viewBox="0 0 24 24"><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r=".8" fill="#fff"/></svg></span>
+      PJL Network
+    </a>
+    <a class="nav-link" href="https://wa.me/17872335761?text=Hola%2C%20quiero%20agendar%20una%20instalación%20o%20visita." target="_blank" rel="noopener">
+      <svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"/></svg><span>Agendar instalación</span>
+    </a>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <h1>Internet rápido y confiable para tu casa en Puerto Rico</h1>
+      <p class="sub">Planes de 15, 20 y 30 megas desde $40 al mes. Escríbenos por WhatsApp y te decimos si llegamos a tu zona.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://wa.me/17872335761" target="_blank" rel="noopener">
+          <svg class="i" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>Escríbenos por WhatsApp
+        </a>
+        <a class="btn btn-secondary" href="https://wa.me/17872335761?text=Hola%2C%20quiero%20agendar%20una%20instalación%20o%20visita." target="_blank" rel="noopener">Agendar instalación</a>
+      </div>
+    </div>
+
+    <aside class="check" aria-label="Consultar cobertura">
+      <p class="check-title">¿Llegamos a tu zona?</p>
+      <p class="check-sub">Mándanos tu ubicación por WhatsApp y te confirmamos la cobertura</p>
+      <p class="bubble">Hola, quiero saber si tienen cobertura en mi zona. Les comparto mi ubicación:</p>
+      <p class="pin"><svg class="i" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12s-8-7-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>Ubicación actual</p>
+      <a class="btn btn-secondary" href="https://wa.me/17872335761?text=Hola%2C%20quiero%20saber%20si%20tienen%20cobertura%20en%20mi%20zona.%20Les%20comparto%20mi%20ubicaci%C3%B3n%3A" target="_blank" rel="noopener">
+        <svg class="i" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12s-8-7-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>Enviar mi ubicación
+      </a>
+    </aside>
+  </section>
 </header>
 
-<section>
-  <h2>Planes Disponibles</h2>
+<main class="wrap plans" id="planes">
+  <h2>Planes disponibles</h2>
+  <p class="plans-sub">Precio mensual. Elige según cuántas personas y equipos se conectan en casa</p>
 
-  <div class="card">
-    <h3>15 Megas</h3>
-    <p class="precio">$40 / mes</p>
-    <p>Ideal para navegación básica, redes sociales y streaming en un solo dispositivo.</p>
+  <div class="grid">
+    <article class="plan">
+      <p class="speed">15<small>megas</small></p>
+      <div class="meter"><span style="width:50%"></span></div>
+      <p class="price">$40 <small>/ mes</small></p>
+      <p class="desc">Ideal para navegación básica, redes sociales y streaming en un solo dispositivo.</p>
+    </article>
+    <article class="plan">
+      <p class="speed">20<small>megas</small></p>
+      <div class="meter"><span style="width:66.6%"></span></div>
+      <p class="price">$50 <small>/ mes</small></p>
+      <p class="desc">Perfecto para varios dispositivos conectados, videollamadas y streaming HD.</p>
+    </article>
+    <article class="plan lead">
+      <p class="speed">30<small>megas</small></p>
+      <div class="meter"><span style="width:100%"></span></div>
+      <p class="price">$60 <small>/ mes</small></p>
+      <p class="desc">Ideal para hogares con múltiples usuarios, streaming 4K y trabajo remoto.</p>
+    </article>
   </div>
+</main>
 
-  <div class="card">
-    <h3>20 Megas</h3>
-    <p class="precio">$50 / mes</p>
-    <p>Perfecto para varios dispositivos conectados, videollamadas y streaming HD.</p>
-  </div>
+<footer class="wrap">PJL Network · Puerto Rico · WhatsApp 787-233-5761</footer>
 
-  <div class="card">
-    <h3>30 Megas</h3>
-    <p class="precio">$60 / mes</p>
-    <p>Ideal para hogares con múltiples usuarios, streaming 4K y trabajo remoto.</p>
-  </div>
-</section>
-
-<a href="https://wa.me/17872335761" class="whatsapp" target="_blank">
-  <i class="fa-brands fa-whatsapp"></i>WhatsApp
-</a>
-
-<a href="https://wa.me/17872335761?text=Hola%2C%20quiero%20saber%20si%20tienen%20cobertura%20en%20mi%20zona.%20Les%20comparto%20mi%20ubicaci%C3%B3n%3A" class="ubicacion" target="_blank">
-  <i class="fa-solid fa-location-dot"></i>Ubicación
-</a>
-
-<a href="https://wa.me/17872335761?text=Hola%2C%20quiero%20agendar%20una%20instalación%20o%20visita." class="agendar" target="_blank">
-  <i class="fa-solid fa-calendar-check"></i>Agendar
+<a href="https://wa.me/17872335761" class="float" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+  <svg class="i" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>WhatsApp
 </a>
 
 </body>
