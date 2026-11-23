@@ -51,3 +51,26 @@ Voz: **Alberto Rodríguez**, masculina, acento latinoamericano, tono serio y nar
 | 4 | Las dudas, las voces de Haití, el día de hoy y el cierre | 3:54 | [MP3](https://cms-toolkit-artifacts.artlist.io/content/-t-e-x-t_-t-o_-s-p-e-e-c-h-v1/media__8/-t-e-x-t_-t-o_-s-p-e-e-c-h-ec27af76-1bc2-4fce-9ba4-45424c761edc.mp3?Expires=2108694078&Key-Pair-Id=K2ZDLYDZI2R1DF&Signature=x2FYgG6diLVXjOX-5qUQ4L43Nfk-JMEjf3IsNjFjdCRv~gq-tg7Yp996v69vKRf-8VYPb7JYyS9oAThygCmJZ71NbIcaUX~~YWDUYGNeNDW6z3EW7Uqk4yLTvzAdPU4SJg4p~90HslQo0pNgvkA5CQuMBWi3x36ObYYO-8DPeRrnSi9brLaB9i~CUbM5dB4OotTmJEEXnn8ov6~KJNZaYiVDdUJJ9RgQG3as8N0jv1xT4RZHu18TwD4g1Xmbf~QkcgwymVAapgzoNk3-gMNNg9~YOh5HgZS1so3PvyNkJEnML2z9HwqO6hIJfO8gHaRk5snl2Ifg1mAmhhu8Ch3ewg__) |
 
 La voz off suma 14:33. Con la apertura, las pausas entre capítulos y el cierre, el video llega a 15:28.
+
+---
+
+# Parte 2: "Bukele en Haití: un mes de guerra" (30 oct. – 23 nov. 2026)
+
+- **Guion:** [`haiti-bukele-un-mes-voz-off.md`](haiti-bukele-un-mes-voz-off.md)
+- **Voz off:** [`produccion/audio-un-mes/`](produccion/audio-un-mes/), cuatro tramos con la voz de Alberto Rodríguez (Artlist).
+- **Recreaciones con IA:** [`produccion/imagenes-un-mes/`](produccion/imagenes-un-mes/), 16 imágenes de Artlist (Nano Banana 2). En el video llevan el rótulo "RECREACIÓN CON IA".
+- **Duración:** unos 16 minutos, en 1080p.
+
+| Capítulo | Inicio |
+|---|---|
+| Apertura | 0:00 |
+| 1 · Las primeras semanas | 0:12 |
+| 2 · Guerra y diplomacia | 4:01 |
+| 3 · Del estadio al luto | 7:48 |
+| 4 · Hoy | 11:48 |
+| Fuentes | 15:48 |
+
+**Novedades del montaje**
+- Mapas con rutas animadas que muestran cómo se han movido las tropas: aeropuerto → Santo (Croix-des-Bouquets) → llanura de Cul-de-Sac → estadio Sylvio Cator → Artibonito.
+- Ruta del traslado del soldado herido a la República Dominicana.
+- Fondos con imágenes de recreación generadas con IA, siempre rotuladas.
