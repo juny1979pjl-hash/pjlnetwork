@@ -21,7 +21,7 @@ Esto instala las dependencias de npm, descarga Kokoro (la voz) desde las release
 - Estructura:
   1. Gancho con una pregunta en los primeros 3 s.
   2. Contexto, causa, giro y consecuencia.
-  3. Cierre con una pregunta para los comentarios.
+  3. Cierre con una pregunta para los comentarios, y termina el `say` de la última escena con **"Sígueme, es gratis."**
 - **Comprueba cada dato:** fechas, cifras y nombres. Si un dato está en disputa, dilo con matices. Nada inventado.
 - Luego ejecuta `python3 tts.py`. Genera `s0.wav`… y `durs.json` con la voz `em_alex`, `lang="es"` y velocidad 1.12.
 - Une las pistas:
@@ -35,6 +35,7 @@ ffmpeg -f concat -safe 0 -i list.txt -af loudnorm=I=-14:TP=-1.5 -ar 48000 voice.
   - `CAM`: una cámara `[lon, lat, escala]` por escena.
   - Colores de países: usa sus códigos ISO numéricos de world-atlas.
   - Superposiciones por `sceneId`.
+  - **Llamado a seguir (obligatorio):** en la última escena, durante sus últimos ~3 s, muestra `pill('👆 SÍGUEME, ¡ES GRATIS!',cx,1190,56,'#e53935')` (por encima de la caja de subtítulos). Ejemplo: `if(local>D[i]-3.2) pill(...)`.
 - Revisa las vistas previas:
 ```bash
 node render.js preview
