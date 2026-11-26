@@ -1,0 +1,198 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:M;font-weight:800;src:url(node_modules/@fontsource/montserrat/files/montserrat-latin-800-normal.woff2)}
+@font-face{font-family:M;font-weight:900;src:url(node_modules/@fontsource/montserrat/files/montserrat-latin-900-normal.woff2)}
+html,body{margin:0;background:#000}
+canvas{display:block}
+</style>
+<script src="node_modules/d3-array/dist/d3-array.min.js"></script>
+<script src="node_modules/d3-geo/dist/d3-geo.min.js"></script>
+<script src="node_modules/topojson-client/dist/topojson-client.min.js"></script>
+</head><body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script>
+const W=1080,H=1920,cx=W/2,cy=860;
+const c=document.getElementById('c'),g=c.getContext('2d');
+let world,countries={},alaska,lower48,graticule=d3.geoGraticule10();
+const C={ocean1:'#0b1f3a',ocean2:'#061226',land:'#2a3b52',border:'#0b1f3a',rus:'#d64545',usa:'#3d7bdc',can:'#e58fb0',uk:'#e58fb0',gold:'#ffc531',white:'#fff'};
+
+window.init=async(scenes,durs)=>{
+  world=await (await fetch('node_modules/world-atlas/countries-50m.json')).json();
+  const fc=topojson.feature(world,world.objects.countries);
+  fc.features.forEach(f=>countries[f.id]=f);
+  window.S=scenes; window.D=durs;
+  let t=0; window.T=durs.map(d=>{const s=t;t+=d;return [s,t]});
+  window.TOTAL=t;
+  await document.fonts.load('900 60px M');await document.fonts.load('800 60px M');
+  return t;
+};
+
+// helpers
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const lerp=(a,b,k)=>a+(b-a)*k;
+const mix=(c1,c2,k)=>{const p=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));const a=p(c1),b=p(c2);return 'rgb('+a.map((v,i)=>Math.round(lerp(v,b[i],k))).join(',')+')'};
+
+// camera keyframes per scene: [lon, lat, scale]
+const CAM=[
+  [-71.2,19,11500],   // hook
+  [-40,27,620],    // colon
+  [-72.3,19.4,14000], // osorio
+  [-71.2,19,11500],   // ryswick
+  [-71.4,19,12000], // rica
+  [-72.0,19,12500],// revuelta
+  [-35,30,600],    // deuda
+  [-71.2,19,11500],   // rd
+  [-71.7,19.1,19000], // cierre
+];
+function cam(t){
+  // smooth transition during the first 1.2s of each scene
+  let i=T.findIndex(([a,b])=>t>=a&&t<b); if(i<0)i=T.length-1;
+  const k=ease(clamp((t-T[i][0])/1.3));
+  const p=CAM[Math.max(0,i-1)],q=CAM[i];
+  const interp=d3.geoInterpolate([p[0],p[1]],[q[0],q[1]])(k);
+  // scale in log space; for last scene push in slowly
+  let s=Math.exp(lerp(Math.log(p[2]),Math.log(q[2]),k));
+  if(i===8) s*=1+0.12*clamp((t-T[i][0])/D[i]);
+  if(i===0) s*=1+0.06*clamp((t-T[i][0])/D[i]);
+  return {lon:interp[0],lat:interp[1],s,i,local:t-T[i][0]};
+}
+
+function arcPoint(local){return d3.geoInterpolate([-6.9,37.2],[-70.5,19.6])(ease(clamp((local-0.4)/2.2)));}
+function fill(path,f,col){g.beginPath();path(f);g.fillStyle=col;g.fill();}
+function stroke(path,f,col,w){g.beginPath();path(f);g.strokeStyle=col;g.lineWidth=w;g.stroke();}
+
+function text(str,x,y,size,col='#fff',opts={}){
+  g.save();g.font=`${opts.w||900} ${size}px M`;g.textAlign=opts.align||'center';g.textBaseline='middle';
+  if(opts.rot){g.translate(x,y);g.rotate(opts.rot);x=0;y=0;}
+  g.lineJoin='round';g.lineWidth=opts.stroke??size*0.16;g.strokeStyle=opts.sc||'rgba(0,0,0,.85)';
+  if(g.lineWidth>0)g.strokeText(str,x,y);g.fillStyle=col;g.fillText(str,x,y);g.restore();
+}
+function pill(str,x,y,size,bg,fg='#fff'){
+  g.save();g.font=`900 ${size}px M`;const w=g.measureText(str).width+size*1.1,h=size*1.6;
+  g.fillStyle=bg;g.beginPath();g.roundRect(x-w/2,y-h/2,w,h,h/2);g.fill();
+  g.fillStyle=fg;g.textAlign='center';g.textBaseline='middle';g.fillText(str,x,y+2);g.restore();
+}
+function dot(p,r,col,pulse=0){
+  if(!p)return;g.beginPath();g.arc(p[0],p[1],r,0,7);g.fillStyle=col;g.fill();
+  if(pulse){g.beginPath();g.arc(p[0],p[1],r+pulse*40,0,7);g.strokeStyle=col;g.globalAlpha=1-pulse;g.lineWidth=5;g.stroke();g.globalAlpha=1;}
+}
+function arc(proj,path,a,b,k,col,w=10,dash=null){
+  const line={type:'LineString',coordinates:[a,b]};
+  const interp=d3.geoInterpolate(a,b);const n=60,m=Math.max(1,Math.round(n*k));
+  const coords=[];for(let j=0;j<=m;j++)coords.push(interp(j/n));
+  g.save();if(dash)g.setLineDash(dash);
+  stroke(path,{type:'LineString',coordinates:coords},col,w);g.restore();
+  if(k>0.02){const tip=proj(coords[coords.length-1]);const pr=proj(coords[Math.max(0,coords.length-3)]);
+    if(tip&&pr){const ang=Math.atan2(tip[1]-pr[1],tip[0]-pr[0]);g.save();g.translate(tip[0],tip[1]);g.rotate(ang);
+      g.beginPath();g.moveTo(10,0);g.lineTo(-26,-20);g.lineTo(-26,20);g.closePath();g.fillStyle=col;g.fill();g.restore();}}
+}
+
+window.draw=(t)=>{
+  const {lon,lat,s,i,local}=cam(t);
+  const proj=d3.geoOrthographic().rotate([-lon,-lat]).scale(s).translate([cx,cy]).clipAngle(90).precision(0.5);
+  const path=d3.geoPath(proj,g);
+  // background
+  const bg=g.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#030a17');bg.addColorStop(1,'#071833');
+  g.fillStyle=bg;g.fillRect(0,0,W,H);
+  // sphere
+  const sg=g.createRadialGradient(cx-s*.3,cy-s*.3,s*.1,cx,cy,s);sg.addColorStop(0,C.ocean1);sg.addColorStop(1,C.ocean2);
+  g.save();g.shadowColor='rgba(80,160,255,.45)';g.shadowBlur=60;fill(path,{type:'Sphere'},sg);g.restore();
+  stroke(path,graticule,'rgba(255,255,255,.06)',2);
+
+  const sceneId=S[i].id;
+  for(const id in countries){fill(path,countries[id],C.land);}
+  const kIn=ease(clamp(local/1.0));
+  const HT='#2f6fe0',DR='#e2a23b',SP='#d64545',FR='#2f6fe0';
+  let ht=C.land,dr=C.land,es=C.land,fr=C.land;
+  const pulse=(Math.sin(t*5)+1)/2;
+  if(sceneId==='hook'){ht=mix(HT,'#7fb0ff',pulse*.5);dr=mix(DR,'#ffd48a',pulse*.5);}
+  if(sceneId==='colon'){es=SP;const k=ease(clamp((local-2.6)/1));ht=mix(C.land,SP,k);dr=ht;}
+  if(sceneId==='osorio'){dr=SP;ht=mix(SP,'#5a4a3a',ease(clamp((local-1.5)/1.5)));}
+  if(sceneId==='ryswick'){dr=SP;ht=mix('#5a4a3a',FR,ease(clamp((local-0.8)/1.2)));}
+  if(sceneId==='rica'){dr=SP;ht=mix(FR,C.gold,pulse*.35);}
+  if(sceneId==='revuelta'){dr=SP;ht=mix(FR,HT,ease(clamp((local-3)/1)));if(local>3)ht=mix(HT,'#9cc2ff',pulse*.4);}
+  if(sceneId==='deuda'){dr=SP;ht=HT;fr='#5a8dee';}
+  if(sceneId==='rd'){ht=HT;dr=mix(HT,DR,ease(clamp((local-3.6)/1.2)));}
+  if(sceneId==='cierre'){ht='#9a7449';dr='#3f9e5a';}
+  fill(path,countries['724'],es);fill(path,countries['250'],fr);
+  fill(path,countries['332'],ht);fill(path,countries['214'],dr);
+  for(const id in countries)stroke(path,countries[id],'rgba(5,15,35,.7)',1.5);
+  stroke(path,countries['332'],'rgba(255,255,255,.5)',2.5);stroke(path,countries['214'],'rgba(255,255,255,.5)',2.5);
+  const P=ll=>(d3.geoDistance(ll,[lon,lat])<Math.PI/2)?proj(ll):null;
+  const lbl=(ll,str,size=52,col='#fff')=>{const p=P(ll);if(p)text(str,p[0],p[1],size,col);};
+  if(sceneId==='hook'){
+    text('UNA ISLA,',cx,200,96,'#fff');text('DOS PAÍSES',cx,310,96,C.gold);
+    lbl([-73.0,18.85],'HAITÍ',58);lbl([-70.2,18.9],'REP. DOMINICANA',44);
+    lbl([-75.5,21.4],'CUBA',40,'#cfd8e6');
+  }
+  if(sceneId==='colon'){
+    pill('1492',cx,200,80,SP);
+    arc(proj,path,[-6.9,37.2],[-70.5,19.6],ease(clamp((local-0.4)/2.2)),C.gold,10);
+    lbl([-4,40],'ESPAÑA',44);
+    if(local>2.4){lbl([-70.7,13.5],'LA ESPAÑOLA',44,C.gold);}
+    if(local>5){const p=P([-69.9,18.47]);dot(p,12,'#fff',(t*1.2)%1);}
+    if(local>0.6){const p=P(arcPoint(local));if(p){text('⛵',p[0],p[1]-40,70,'#fff',{stroke:0});}}
+  }
+  if(sceneId==='osorio'){
+    pill('1605 · DEVASTACIONES',cx,200,56,SP);
+    if(local>3.5){lbl([-72.8,20.25],'🏴‍☠️',90);lbl([-72.8,20.55],'Isla Tortuga',36);}
+    if(local>5){lbl([-73.3,18.9],'PIRATAS FRANCESES',40,'#cfe0ff');}
+    lbl([-71.0,18.9],'ESPAÑA',50);
+  }
+  if(sceneId==='ryswick'){
+    pill('1697 · TRATADO DE RYSWICK',cx,200,52,FR);
+    if(local>1.5){lbl([-73.0,18.85],'FRANCIA',52);lbl([-70.3,18.9],'ESPAÑA',52);}
+    if(local>3.2)pill('SAINT-DOMINGUE',cx,1360,58,FR);
+  }
+  if(sceneId==='rica'){
+    text('LA COLONIA',cx,190,84,'#fff');text('MÁS RICA DEL MUNDO',cx,290,74,C.gold);
+    const icons=[[0.6,[-73.0,19.3],'☕'],[1.4,[-72.2,18.7],'🌾'],[2.2,[-72.4,19.6],'💰']];
+    icons.forEach(([at,ll,em])=>{if(local>at){const k=ease(clamp((local-at)/.5));const p=P(ll);if(p)text(em,p[0],p[1],100*k,'#fff',{stroke:0});}});
+    if(local>3.4){const k=ease(clamp((local-3.4)/1.6));pill('≈ '+Math.round(500000*k).toLocaleString('es-ES')+' esclavizados',cx,1360,52,'rgba(0,0,0,.75)');}
+  }
+  if(sceneId==='revuelta'){
+    pill('1791',cx,190,70,'#b22');
+    if(local>0.5){lbl([-72.4,19.15],'✊',140);}
+    if(local>3){const k=ease(clamp((local-3)/.6));g.save();g.translate(cx,330);g.scale(k,k);text('1804 · HAITÍ',0,0,92,C.gold);g.restore();
+      pill('1.ª REPÚBLICA NEGRA LIBRE',cx,1360,48,HT);}
+  }
+  if(sceneId==='deuda'){
+    arc(proj,path,[2.3,48.8],[-72.3,18.6],ease(clamp((local-0.3)/2)),'#ff5d5d',12,[30,16]);
+    lbl([2.3,51.5],'FRANCIA',44);lbl([-72.3,21.5],'HAITÍ',44);
+    if(local>1.5){const k=ease(clamp((local-1.5)/2.2));text(Math.round(150*k)+' MILLONES',cx,230,92,'#ff7a7a');text('DE FRANCOS · 1825',cx,330,54,'#fff');}
+    if(local>3.5)pill('PAGADA HASTA 1947',cx,1360,54,'rgba(0,0,0,.75)');
+  }
+  if(sceneId==='rd'){
+    pill(local<3.6?'1822 · HAITÍ UNE LA ISLA':'1844 · INDEPENDENCIA',cx,200,54,local<3.6?HT:DR,local<3.6?'#fff':'#111');
+    lbl([-73.0,18.85],'HAITÍ',56);
+    if(local>4)lbl([-70.2,18.9],'REP. DOMINICANA',44);
+  }
+  if(sceneId==='cierre'){
+    text('LA FRONTERA',cx,200,88,'#fff');
+    lbl([-72.3,19.3],'HAITÍ',58);lbl([-71.1,19.1],'R. DOMINICANA',46);
+    if(local>1.5){lbl([-72.3,19.05],'criollo · francés',36);lbl([-71.1,18.85],'español',36);}
+    if(local>4){text('¿LO SABÍAS?',cx,1360,80,C.gold);}
+  }
+  // caption (lower third) – words revealed progressively
+  const rawWords=S[i].cap.split(' ');const HLW=rawWords.map(w=>/^\*.*\*$/.test(w));const words=rawWords.map(w=>w.replace(/^\*(.*)\*$/,'$1'));const n=Math.ceil(words.length*clamp(local/(D[i]*0.8)));
+  const shown=words.slice(0,Math.max(1,n));
+  g.font='800 54px M';const lines=[];let cur='';
+  for(const w of words){const tr=(cur?cur+' ':'')+w;if(g.measureText(tr).width>900&&cur){lines.push(cur);cur=w}else cur=tr;}
+  lines.push(cur);
+  let idx=0;const y0=1640-((lines.length-1)*72)/2;
+  g.save();g.fillStyle='rgba(0,0,0,.55)';const bh=lines.length*72+50;g.beginPath();g.roundRect(60,y0-60,W-120,bh,28);g.fill();g.restore();
+  lines.forEach((ln,li)=>{
+    const ws=ln.split(' ');g.font='800 54px M';
+    const full=g.measureText(ln).width;let x=cx-full/2;
+    ws.forEach(w=>{const vis=idx<shown.length;const hl=HLW[idx];idx++;
+      const ww=g.measureText(w+' ').width;
+      g.save();g.textAlign='left';g.textBaseline='middle';g.globalAlpha=vis?1:0.18;
+      g.fillStyle=hl?C.gold:'#fff';g.fillText(w,x,y0+li*72);g.restore();x+=ww;});
+  });
+  // progress bar + watermark
+  g.fillStyle='rgba(255,255,255,.15)';g.fillRect(0,H-12,W,12);g.fillStyle=C.gold;g.fillRect(0,H-12,W*t/TOTAL,12);
+  text('Mapa: Natural Earth',W-30,H-40,22,'rgba(255,255,255,.45)',{align:'right',w:800,stroke:0});
+};
+</script></body></html>
